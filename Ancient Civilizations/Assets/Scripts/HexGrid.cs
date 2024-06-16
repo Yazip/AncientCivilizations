@@ -15,9 +15,12 @@ public class HexGrid : MonoBehaviour
 
     Canvas gridCanvas;
 
+    HexMesh hexMesh;
+
     void Awake()
     {
         gridCanvas = GetComponentInChildren<Canvas>(); // Получаем canvas
+        hexMesh = GetComponentInChildren<HexMesh>(); // Получаем mesh
 
         cells = new HexCell[height * width]; // Выделяем память под массив ячеек
 
@@ -30,6 +33,11 @@ public class HexGrid : MonoBehaviour
                 CreateCell(x, z, i++);
             }
         }
+    }
+
+    void Start()
+    {
+        hexMesh.Triangulate(cells); // Триангуляция ячеек
     }
 
     // Метод для создания ячейки
