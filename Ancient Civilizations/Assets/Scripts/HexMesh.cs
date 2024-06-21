@@ -8,13 +8,17 @@ public class HexMesh : MonoBehaviour
     Mesh hexMesh;
     List<Vector3> vertices;
     List<int> triangles;
+    MeshCollider meshCollider;
+    List<Color> colors;
 
     void Awake()
     {
-        // Инициализация mesh, выделение памяти для списка вершин и треугольников
+        // Инициализация mesh и mesh collider, выделение памяти для списка вершин, цветов и треугольников
         GetComponent<MeshFilter>().mesh = hexMesh = new Mesh();
+        meshCollider = gameObject.AddComponent<MeshCollider>();
         hexMesh.name = "Hex Mesh";
         vertices = new List<Vector3>();
+        colors = new List<Color>();
         triangles = new List<int>();
     }
 
@@ -23,14 +27,17 @@ public class HexMesh : MonoBehaviour
     {
         hexMesh.Clear();
         vertices.Clear();
+        colors.Clear();
         triangles.Clear();
         for (int i = 0; i < cells.Length; i++)
         {
             Triangulate(cells[i]);
         }
         hexMesh.vertices = vertices.ToArray();
+        hexMesh.colors = colors.ToArray();
         hexMesh.triangles = triangles.ToArray();
         hexMesh.RecalculateNormals();
+        meshCollider.sharedMesh = hexMesh;
     }
 
     // Метод для триангуляции ячейки
@@ -44,7 +51,16 @@ public class HexMesh : MonoBehaviour
                 center + HexMetrics.corners[i],
                 center + HexMetrics.corners[i + 1]
             );
+            AddTriangleColor(cell.color);
         }
+    }
+
+    // Метод для добавления цвета
+    void AddTriangleColor(Color color)
+    {
+        colors.Add(color);
+        colors.Add(color);
+        colors.Add(color);
     }
 
     // Метод для добавления треугольника
