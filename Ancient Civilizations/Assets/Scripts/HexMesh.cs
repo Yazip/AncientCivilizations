@@ -11,14 +11,14 @@ public class HexMesh : MonoBehaviour
 
     void Awake()
     {
-        // Инициализация mesh, выделение памяти для списка вершин и треугольников
+        // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ mesh, РІС‹РґРµР»РµРЅРёРµ РїР°РјСЏС‚Рё РґР»СЏ СЃРїРёСЃРєР° РІРµСЂС€РёРЅ Рё С‚СЂРµСѓРіРѕР»СЊРЅРёРєРѕРІ
         GetComponent<MeshFilter>().mesh = hexMesh = new Mesh();
         hexMesh.name = "Hex Mesh";
         vertices = new List<Vector3>();
         triangles = new List<int>();
     }
 
-    // Метод для триангуляции ячеек
+    // РњРµС‚РѕРґ РґР»СЏ С‚СЂРёР°РЅРіСѓР»СЏС†РёРё СЏС‡РµРµРє
     public void Triangulate(HexCell[] cells)
     {
         hexMesh.Clear();
@@ -33,7 +33,7 @@ public class HexMesh : MonoBehaviour
         hexMesh.RecalculateNormals();
     }
 
-    // Метод для триангуляции ячейки
+    // РњРµС‚РѕРґ РґР»СЏ С‚СЂРёР°РЅРіСѓР»СЏС†РёРё СЏС‡РµР№РєРё
     void Triangulate(HexCell cell)
     {
         Vector3 center = cell.transform.localPosition;
@@ -47,7 +47,7 @@ public class HexMesh : MonoBehaviour
         }
     }
 
-    // Метод для добавления треугольника
+    // РњРµС‚РѕРґ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°
     void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)
     {
         int vertexIndex = vertices.Count;

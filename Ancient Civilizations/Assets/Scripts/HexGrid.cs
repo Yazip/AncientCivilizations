@@ -19,12 +19,12 @@ public class HexGrid : MonoBehaviour
 
     void Awake()
     {
-        gridCanvas = GetComponentInChildren<Canvas>(); // Получаем canvas
-        hexMesh = GetComponentInChildren<HexMesh>(); // Получаем mesh
+        gridCanvas = GetComponentInChildren<Canvas>(); // РџРѕР»СѓС‡Р°РµРј canvas
+        hexMesh = GetComponentInChildren<HexMesh>(); // РџРѕР»СѓС‡Р°РµРј mesh
 
-        cells = new HexCell[height * width]; // Выделяем память под массив ячеек
+        cells = new HexCell[height * width]; // Р’С‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РїРѕРґ РјР°СЃСЃРёРІ СЏС‡РµРµРє
 
-        // Заполняем массив ячейками
+        // Р—Р°РїРѕР»РЅСЏРµРј РјР°СЃСЃРёРІ СЏС‡РµР№РєР°РјРё
 
         for (int z = 0, i = 0; z < height; z++)
         {
@@ -37,32 +37,33 @@ public class HexGrid : MonoBehaviour
 
     void Start()
     {
-        hexMesh.Triangulate(cells); // Триангуляция ячеек
+        hexMesh.Triangulate(cells); // РўСЂРёР°РЅРіСѓР»СЏС†РёСЏ СЏС‡РµРµРє
     }
 
-    // Метод для создания ячейки
+    // РњРµС‚РѕРґ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ СЏС‡РµР№РєРё
 
     void CreateCell(int x, int z, int i)
     {
         
-        // Вычисляем позицию ячейки
+        // Р’С‹С‡РёСЃР»СЏРµРј РїРѕР·РёС†РёСЋ СЏС‡РµР№РєРё
 
         Vector3 position;
         position.x = (x + z * 0.5f - z / 2) * (HexMetrics.innerRadius * 2f);
         position.y = 0f;
         position.z = z * (HexMetrics.outerRadius * 1.5f);
 
-        // Создаём ячейку
+        // РЎРѕР·РґР°С‘Рј СЏС‡РµР№РєСѓ
 
         HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
         cell.transform.SetParent(transform, false);
         cell.transform.localPosition = position;
+        cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
 
-        // Выводим координаты ячейки в виде текста на ней
+        // Р’С‹РІРѕРґРёРј РєРѕРѕСЂРґРёРЅР°С‚С‹ СЏС‡РµР№РєРё РІ РІРёРґРµ С‚РµРєСЃС‚Р° РЅР° РЅРµР№
 
         TMP_Text label = Instantiate<TMP_Text>(cellLabelPrefab);
         label.rectTransform.SetParent(gridCanvas.transform, false);
         label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
-        label.text = x.ToString() + "\n" + z.ToString();
+        label.text = cell.coordinates.ToStringOnSeparateLines();
     }
 }
