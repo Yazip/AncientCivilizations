@@ -18,7 +18,6 @@ public class HexGrid : MonoBehaviour
     HexMesh hexMesh;
 
     public Color defaultColor = Color.white;
-    public Color touchedColor = Color.magenta;
 
     void Awake()
     {
@@ -41,14 +40,6 @@ public class HexGrid : MonoBehaviour
     void Start()
     {
         hexMesh.Triangulate(cells); // Триангуляция ячеек
-    }
-
-    void Update()
-    {
-        if (Input.GetMouseButton(0))
-        {
-            HandleInput();
-        }
     }
 
     // Метод для создания ячейки
@@ -79,25 +70,14 @@ public class HexGrid : MonoBehaviour
         label.text = cell.coordinates.ToStringOnSeparateLines();
     }
 
-    // Метод для пуска на сцену луча из позиции курсора мыши
-    void HandleInput()
-    {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(inputRay, out hit))
-        {
-            TouchCell(hit.point);
-        }
-    }
-
     // Метод для окрашивания ячейки в другой цвет при касании
-    void TouchCell(Vector3 position)
+    public void ColorCell(Vector3 position, Color color)
     {
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
         int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
         HexCell cell = cells[index];
-        cell.color = touchedColor;
+        cell.color = color;
         hexMesh.Triangulate(cells);
     }
 }
