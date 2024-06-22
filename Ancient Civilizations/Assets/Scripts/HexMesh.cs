@@ -43,24 +43,36 @@ public class HexMesh : MonoBehaviour
     // Метод для триангуляции ячейки
     void Triangulate(HexCell cell)
     {
-        Vector3 center = cell.transform.localPosition;
-        for (int i = 0; i < 6; i++)
+        for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
         {
-            AddTriangle(
-                center,
-                center + HexMetrics.corners[i],
-                center + HexMetrics.corners[i + 1]
-            );
-            AddTriangleColor(cell.color);
+            Triangulate(d, cell);
         }
     }
 
-    // Метод для добавления цвета
-    void AddTriangleColor(Color color)
+    void Triangulate(HexDirection direction, HexCell cell)
     {
-        colors.Add(color);
-        colors.Add(color);
-        colors.Add(color);
+        Vector3 center = cell.transform.localPosition;
+        AddTriangle(
+            center,
+            center + HexMetrics.GetFirstCorner(direction),
+            center + HexMetrics.GetSecondCorner(direction)
+        );
+        HexCell prevNeighbor = cell.GetNeighbor(direction.Previous()) ?? cell;
+        HexCell neighbor = cell.GetNeighbor(direction) ?? cell;
+        HexCell nextNeighbor = cell.GetNeighbor(direction.Next()) ?? cell;       
+        AddTriangleColor(
+            cell.color,
+            (cell.color + prevNeighbor.color + neighbor.color) / 3f,
+            (cell.color + neighbor.color + nextNeighbor.color) / 3f
+        );
+    }
+
+    // Метод для добавления цветов
+    void AddTriangleColor(Color c1, Color c2, Color c3)
+    {
+        colors.Add(c1);
+        colors.Add(c2);
+        colors.Add(c3);
     }
 
     // Метод для добавления треугольника
