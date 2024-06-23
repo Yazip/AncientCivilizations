@@ -32,7 +32,11 @@ public class HexCell : MonoBehaviour
         }
     }
 
-    // Метод для получения соседа ячейки в одном направлении
+    public HexEdgeType GetEdgeType(HexDirection direction)
+    {
+        return HexMetrics.GetEdgeType(elevation, neighbors[(int)direction].elevation);
+    }
+
     public HexCell GetNeighbor(HexDirection direction)
     {
         return neighbors[(int)direction];
