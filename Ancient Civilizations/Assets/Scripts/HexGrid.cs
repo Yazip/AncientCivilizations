@@ -19,8 +19,12 @@ public class HexGrid : MonoBehaviour
 
     public Color defaultColor = Color.white;
 
+    public Texture2D noiseSource;
+
     void Awake()
     {
+        HexMetrics.noiseSource = noiseSource;
+
         gridCanvas = GetComponentInChildren<Canvas>(); // Получаем canvas
         hexMesh = GetComponentInChildren<HexMesh>(); // Получаем mesh
 
@@ -40,6 +44,11 @@ public class HexGrid : MonoBehaviour
     void Start()
     {
         hexMesh.Triangulate(cells); // Триангуляция ячеек
+    }
+
+    void OnEnable()
+    {
+        HexMetrics.noiseSource = noiseSource;
     }
 
     // Метод для создания ячейки
