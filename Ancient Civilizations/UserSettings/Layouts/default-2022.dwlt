@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Inspector
+  m_Title: Game
   m_RootView: {fileID: 6}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 104
+  controlID: 39
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -321,7 +321,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Materials
+    - Assets/Scripts
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -329,7 +329,7 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Materials
+  - Assets/Scripts
   m_LastFoldersGridSize: -1
   m_LastProjectPath: "D:\\\u0423\u043D\u0438\u0432\u0435\u0440\\\u041F\u0440\u0430\u043A\u0442\u0438\u043A\u0430
     2 \u043A\u0443\u0440\u0441\\AncientCivilizations\\Ancient Civilizations"
@@ -337,9 +337,9 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 845b0000
-    m_LastClickedID: 23428
-    m_ExpandedIDs: 000000007a5b000000ca9a3bffffff7f
+    m_SelectedIDs: 8c5b0000
+    m_LastClickedID: 23436
+    m_ExpandedIDs: 000000007c5b000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -367,7 +367,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000007a5b0000
+    m_ExpandedIDs: 000000007c5b0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -507,9 +507,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 6e5a0000
-      m_LastClickedID: 23150
-      m_ExpandedIDs: 30fbffff
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: 30fbffff6e5a0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -863,9 +863,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -211.93562, y: 417.27844, z: -225.023}
+    m_Target: {x: 74.291, y: 42.883408, z: 12.231557}
     speed: 2
-    m_Value: {x: -211.93562, y: 417.27844, z: -225.023}
+    m_Value: {x: 74.291, y: 42.883408, z: 12.231557}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -911,9 +911,9 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.33757633, y: -0.32919577, z: 0.12795396, w: -0.8726632}
+    m_Target: {x: -0.5014544, y: -0.0148014715, z: 0.00922654, w: -0.86514956}
     speed: 2
-    m_Value: {x: -0.33753568, y: -0.32915613, z: 0.12793855, w: -0.8725581}
+    m_Value: {x: -0.50139314, y: -0.014799663, z: 0.009225413, w: -0.8650439}
   m_Size:
     m_Target: 10.987873
     speed: 2
