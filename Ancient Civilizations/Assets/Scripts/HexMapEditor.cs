@@ -39,9 +39,9 @@ public class HexMapEditor : MonoBehaviour
     // Метод для изменения ячейки
     void EditCell(HexCell cell)
     {
-        cell.color = activeColor;
+        cell.Color = activeColor;
         cell.Elevation = activeElevation;
-        hexGrid.Refresh();
+        //hexGrid.Refresh();
     }
 
     // Метод для выбора активного цвета
