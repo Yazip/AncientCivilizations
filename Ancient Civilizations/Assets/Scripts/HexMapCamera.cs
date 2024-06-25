@@ -11,8 +11,6 @@ public class HexMapCamera : MonoBehaviour
 
     public float swivelMinZoom, swivelMaxZoom;
 
-    //public float moveSpeed;
-
     public float moveSpeedMinZoom, moveSpeedMaxZoom;
 
     public HexGrid grid;

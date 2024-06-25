@@ -17,9 +17,6 @@ public class HexMesh : MonoBehaviour
         GetComponent<MeshFilter>().mesh = hexMesh = new Mesh();
         meshCollider = gameObject.AddComponent<MeshCollider>();
         hexMesh.name = "Hex Mesh";
-        //vertices = new List<Vector3>();
-        //colors = new List<Color>();
-        //triangles = new List<int>();
     }
 
     // Метод для триангуляции ячеек
@@ -426,7 +423,6 @@ public class HexMesh : MonoBehaviour
     {
         Vector4 sample = HexMetrics.SampleNoise(position);
         position.x += (sample.x * 2f - 1f) * HexMetrics.cellPerturbStrength;
-        //position.y += (sample.y * 2f - 1f) * HexMetrics.cellPerturbStrength;
         position.z += (sample.z * 2f - 1f) * HexMetrics.cellPerturbStrength;
         return position;
     }

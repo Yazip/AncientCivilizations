@@ -10,9 +10,6 @@ public class HexGrid : MonoBehaviour
 
     public int chunkCountX = 4, chunkCountZ = 3;
 
-    //public int width = 6;
-    //public int height = 6;
-
     int cellCountX, cellCountZ;
 
     public HexCell cellPrefab;
@@ -20,10 +17,6 @@ public class HexGrid : MonoBehaviour
     HexCell[] cells;
 
     public TMP_Text cellLabelPrefab;
-
-    //Canvas gridCanvas;
-
-    //HexMesh hexMesh;
 
     public Color defaultColor = Color.white;
 
@@ -33,9 +26,6 @@ public class HexGrid : MonoBehaviour
     {
         HexMetrics.noiseSource = noiseSource;
 
-        //gridCanvas = GetComponentInChildren<Canvas>(); // Получаем canvas
-        //hexMesh = GetComponentInChildren<HexMesh>(); // Получаем mesh
-
         cells = new HexCell[cellCountZ * cellCountX]; // Выделяем память под массив ячеек
 
         cellCountX = chunkCountX * HexMetrics.chunkSizeX;
@@ -44,11 +34,6 @@ public class HexGrid : MonoBehaviour
         CreateChunks();
         CreateCells();
     }
-
-    //void Start()
-    //{
-    //    hexMesh.Triangulate(cells); // Триангуляция ячеек
-    //}
 
     void OnEnable()
     {
@@ -99,7 +84,6 @@ public class HexGrid : MonoBehaviour
         // Создаём ячейку
 
         HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
-        //cell.transform.SetParent(transform, false);
         cell.transform.localPosition = position;
         cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.Color = defaultColor;
@@ -133,7 +117,6 @@ public class HexGrid : MonoBehaviour
         // Выводим координаты ячейки в виде текста на ней
 
         TMP_Text label = Instantiate<TMP_Text>(cellLabelPrefab);
-        //label.rectTransform.SetParent(gridCanvas.transform, false);
         label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
         label.text = cell.coordinates.ToStringOnSeparateLines();
         cell.uiRect = label.rectTransform;
@@ -164,8 +147,27 @@ public class HexGrid : MonoBehaviour
         return cells[index];
     }
 
-    //public void Refresh()
-    //{
-    //    hexMesh.Triangulate(cells);
-    //}
+    public HexCell GetCell(HexCoordinates coordinates)
+    {
+        int z = coordinates.Z;
+        if (z < 0 || z >= cellCountZ)
+        {
+            return null;
+        }
+        int x = coordinates.X + z / 2;
+        if (x < 0 || x >= cellCountX)
+        {
+            return null;
+        }
+        return cells[x + z * cellCountX];
+    }
+
+    // Метод для активации/деактивации UI
+    public void ShowUI(bool visible)
+    {
+        for (int i = 0; i < chunks.Length; i++)
+        {
+            chunks[i].ShowUI(visible);
+        }
+    }
 }
