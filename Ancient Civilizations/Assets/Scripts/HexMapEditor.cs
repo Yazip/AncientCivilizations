@@ -12,9 +12,13 @@ public class HexMapEditor : MonoBehaviour
 
     int activeElevation;
 
+    int activeWaterLevel;
+
     bool applyColor;
 
     bool applyElevation = true;
+
+    bool applyWaterLevel = true;
 
     int brushSize;
 
@@ -77,6 +81,10 @@ public class HexMapEditor : MonoBehaviour
             {
                 cell.Elevation = activeElevation;
             }
+            if (applyWaterLevel)
+            {
+                cell.WaterLevel = activeWaterLevel;
+            }
         }
     }
 
@@ -112,5 +120,17 @@ public class HexMapEditor : MonoBehaviour
     public void ShowUI(bool visible)
     {
         hexGrid.ShowUI(visible);
+    }
+
+    // Метод для выбора возможности задания уровня воды
+    public void SetApplyWaterLevel(bool toggle)
+    {
+        applyWaterLevel = toggle;
+    }
+
+    // Метод для выбора уровня воды
+    public void SetWaterLevel(float level)
+    {
+        activeWaterLevel = (int)level;
     }
 }
