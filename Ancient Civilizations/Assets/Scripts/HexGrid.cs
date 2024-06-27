@@ -22,9 +22,12 @@ public class HexGrid : MonoBehaviour
 
     public Texture2D noiseSource;
 
+    public int seed;
+
     void Awake()
     {
         HexMetrics.noiseSource = noiseSource;
+        HexMetrics.InitializeHashGrid(seed);
 
         cells = new HexCell[cellCountZ * cellCountX]; // Выделяем память под массив ячеек
 
@@ -37,7 +40,11 @@ public class HexGrid : MonoBehaviour
 
     void OnEnable()
     {
-        HexMetrics.noiseSource = noiseSource;
+        if (!HexMetrics.noiseSource)
+        {
+            HexMetrics.noiseSource = noiseSource;
+            HexMetrics.InitializeHashGrid(seed);
+        }
     }
 
     // Метод для создания фрагментов

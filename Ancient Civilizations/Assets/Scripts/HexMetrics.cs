@@ -33,6 +33,12 @@ public static class HexMetrics {
 
     public const int chunkSizeX = 5, chunkSizeZ = 5;
 
+    public const int hashGridSize = 256;
+
+    static HexHash[] hashGrid;
+
+    public const float hashGridScale = 0.25f;
+
     static Vector3[] corners = {
 		new Vector3(0f, 0f, outerRadius),
 		new Vector3(innerRadius, 0f, 0.5f * outerRadius),
@@ -95,6 +101,22 @@ public static class HexMetrics {
         return noiseSource.GetPixelBilinear(position.x * noiseScale, position.z * noiseScale);
     }
 
+    // Метод сэмплирования хэш-таблицы
+    public static HexHash SampleHashGrid(Vector3 position)
+    {
+        int x = (int)(position.x * hashGridScale) % hashGridSize;
+        if (x < 0)
+        {
+            x += hashGridSize;
+        }
+        int z = (int)(position.z * hashGridScale) % hashGridSize;
+        if (z < 0)
+        {
+            z += hashGridSize;
+        }
+        return hashGrid[x + z * hashGridSize];
+    }
+
     // Метод интерполяции
     public static Vector3 TerraceLerp(Vector3 a, Vector3 b, int step)
     {
@@ -119,5 +141,18 @@ public static class HexMetrics {
         position.x += (sample.x * 2f - 1f) * cellPerturbStrength;
         position.z += (sample.z * 2f - 1f) * cellPerturbStrength;
         return position;
+    }
+
+    // Метод для создания хеш-таблицы
+    public static void InitializeHashGrid(int seed)
+    {
+        hashGrid = new HexHash[hashGridSize * hashGridSize];
+        Random.State currentState = Random.state;
+        Random.InitState(seed);
+        for (int i = 0; i < hashGrid.Length; i++)
+        {
+            hashGrid[i] = HexHash.Create();
+        }
+        Random.state = currentState;
     }
 }

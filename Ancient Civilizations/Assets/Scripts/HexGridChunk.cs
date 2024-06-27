@@ -18,6 +18,7 @@ public class HexGridChunk : MonoBehaviour
 
     void LateUpdate()
     {
+        Triangulate();
         enabled = false;
     }
 
