@@ -12,15 +12,20 @@ public class HexMapEditor : MonoBehaviour
 
     int activeElevation;
 
-    int activeWaterLevel;
-
     bool applyColor;
 
     bool applyElevation = true;
 
-    bool applyWaterLevel = true;
-
     int brushSize;
+
+    bool isDrag;
+    HexDirection dragDirection;
+    HexCell previousCell;
+
+    enum OptionalToggle
+    {
+        Ignore, Yes, No
+    }
 
     void Awake()
     {
@@ -33,6 +38,10 @@ public class HexMapEditor : MonoBehaviour
         {
             HandleInput();
         }
+        else
+        {
+            previousCell = null;
+        }
     }
 
     // Метод для пуска на сцену луча из позиции курсора мыши
@@ -42,7 +51,22 @@ public class HexMapEditor : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(inputRay, out hit))
         {
-            EditCells(hexGrid.GetCell(hit.point));
+            HexCell currentCell = hexGrid.GetCell(hit.point);
+            if (previousCell && previousCell != currentCell)
+            {
+                ValidateDrag(currentCell);
+            }
+            else
+            {
+                isDrag = false;
+            }
+            EditCells(currentCell);
+            previousCell = currentCell;
+            isDrag = true;
+        }
+        else
+        {
+            previousCell = null;
         }
     }
 
@@ -81,11 +105,25 @@ public class HexMapEditor : MonoBehaviour
             {
                 cell.Elevation = activeElevation;
             }
-            if (applyWaterLevel)
+        }
+    }
+
+    // Метод для проверки перетаскивания
+    void ValidateDrag(HexCell currentCell)
+    {
+        for (
+            dragDirection = HexDirection.NE;
+            dragDirection <= HexDirection.NW;
+            dragDirection++
+        )
+        {
+            if (previousCell.GetNeighbor(dragDirection) == currentCell)
             {
-                cell.WaterLevel = activeWaterLevel;
+                isDrag = true;
+                return;
             }
         }
+        isDrag = false;
     }
 
     // Метод для выбора активного цвета
@@ -120,17 +158,5 @@ public class HexMapEditor : MonoBehaviour
     public void ShowUI(bool visible)
     {
         hexGrid.ShowUI(visible);
-    }
-
-    // Метод для выбора возможности задания уровня воды
-    public void SetApplyWaterLevel(bool toggle)
-    {
-        applyWaterLevel = toggle;
-    }
-
-    // Метод для выбора уровня воды
-    public void SetWaterLevel(float level)
-    {
-        activeWaterLevel = (int)level;
     }
 }

@@ -15,8 +15,6 @@ public class HexCell : MonoBehaviour
 
     int elevation = int.MinValue;
 
-    int waterLevel;
-
     public int Elevation
     {
         get
@@ -69,41 +67,6 @@ public class HexCell : MonoBehaviour
         }
     }
 
-    public int WaterLevel
-    {
-        get
-        {
-            return waterLevel;
-        }
-        set
-        {
-            if (waterLevel == value)
-            {
-                return;
-            }
-            waterLevel = value;
-            Refresh();
-        }
-    }
-
-    public bool IsUnderwater
-    {
-        get
-        {
-            return waterLevel > elevation;
-        }
-    }
-
-    public float WaterSurfaceY
-    {
-        get
-        {
-            return
-                (waterLevel + HexMetrics.waterElevationOffset) *
-                HexMetrics.elevationStep;
-        }
-    }
-
     public HexEdgeType GetEdgeType(HexDirection direction)
     {
         return HexMetrics.GetEdgeType(elevation, neighbors[(int)direction].elevation);
@@ -133,6 +96,11 @@ public class HexCell : MonoBehaviour
                 }
             }
         }
+    }
+
+    void RefreshSelfOnly()
+    {
+        chunk.Refresh();
     }
 
     // Метод для задания соседа

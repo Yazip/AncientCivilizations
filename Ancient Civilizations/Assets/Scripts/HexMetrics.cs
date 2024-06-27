@@ -2,9 +2,12 @@ using UnityEngine;
 
 public static class HexMetrics {
 
-	public const float outerRadius = 10f;
+    public const float outerToInner = 0.866025404f;
+    public const float innerToOuter = 1f / outerToInner;
 
-	public const float innerRadius = outerRadius * 0.866025404f;
+    public const float outerRadius = 10f;
+
+	public const float innerRadius = outerRadius * outerToInner;
 
     public const float solidFactor = 0.8f;
 
@@ -29,8 +32,6 @@ public static class HexMetrics {
     public const float elevationPerturbStrength = 1.5f;
 
     public const int chunkSizeX = 5, chunkSizeZ = 5;
-
-    public const float waterElevationOffset = -0.5f;
 
     static Vector3[] corners = {
 		new Vector3(0f, 0f, outerRadius),
@@ -81,6 +82,13 @@ public static class HexMetrics {
         return HexEdgeType.Cliff;
     }
 
+    public static Vector3 GetSolidEdgeMiddle(HexDirection direction)
+    {
+        return
+            (corners[(int)direction] + corners[(int)direction + 1]) *
+            (0.5f * solidFactor);
+    }
+
     // Метод сэмплирования шума
     public static Vector4 SampleNoise(Vector3 position)
     {
@@ -102,5 +110,14 @@ public static class HexMetrics {
     {
         float h = step * horizontalTerraceStepSize;
         return Color.Lerp(a, b, h);
+    }
+
+    // Метод для получения из неперемещённой точки перемещённой точки
+    public static Vector3 Perturb(Vector3 position)
+    {
+        Vector4 sample = SampleNoise(position);
+        position.x += (sample.x * 2f - 1f) * cellPerturbStrength;
+        position.z += (sample.z * 2f - 1f) * cellPerturbStrength;
+        return position;
     }
 }
