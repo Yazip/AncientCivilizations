@@ -4,19 +4,15 @@ using UnityEngine.EventSystems;
 public class HexMapEditor : MonoBehaviour
 {
 
-    public Color[] colors;
-
     public HexGrid hexGrid;
 
-    private Color activeColor;
-
     int activeElevation;
-
-    bool applyColor;
 
     bool applyElevation = true;
 
     int brushSize;
+
+    int activeTerrainTypeIndex;
 
     bool isDrag;
     HexDirection dragDirection;
@@ -25,11 +21,6 @@ public class HexMapEditor : MonoBehaviour
     enum OptionalToggle
     {
         Ignore, Yes, No
-    }
-
-    void Awake()
-    {
-        SelectColor(0);
     }
 
     void Update()
@@ -97,9 +88,9 @@ public class HexMapEditor : MonoBehaviour
     {
         if (cell)
         {
-            if (applyColor)
+            if (activeTerrainTypeIndex >= 0)
             {
-                cell.Color = activeColor;
+                cell.TerrainTypeIndex = activeTerrainTypeIndex;
             }
             if (applyElevation)
             {
@@ -126,14 +117,10 @@ public class HexMapEditor : MonoBehaviour
         isDrag = false;
     }
 
-    // Метод для выбора активного цвета
-    public void SelectColor(int index)
+    // Метод для выбора активного типа рельефа
+    public void SetTerrainTypeIndex(int index)
     {
-        applyColor = index >= 0;
-        if (applyColor)
-        {
-            activeColor = colors[index];
-        }
+        activeTerrainTypeIndex = index;
     }
 
     // Метод для выбора активной высоты

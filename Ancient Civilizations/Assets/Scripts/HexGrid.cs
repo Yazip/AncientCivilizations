@@ -8,9 +8,9 @@ public class HexGrid : MonoBehaviour
 
     HexGridChunk[] chunks;
 
-    public int chunkCountX = 4, chunkCountZ = 3;
+    public int cellCountX = 20, cellCountZ = 15;
 
-    int cellCountX, cellCountZ;
+    int chunkCountX, chunkCountZ;
 
     public HexCell cellPrefab;
 
@@ -18,24 +18,18 @@ public class HexGrid : MonoBehaviour
 
     public TMP_Text cellLabelPrefab;
 
-    public Color defaultColor = Color.white;
-
     public Texture2D noiseSource;
 
     public int seed;
+
+    public Color[] colors;
 
     void Awake()
     {
         HexMetrics.noiseSource = noiseSource;
         HexMetrics.InitializeHashGrid(seed);
-
-        cells = new HexCell[cellCountZ * cellCountX]; // Выделяем память под массив ячеек
-
-        cellCountX = chunkCountX * HexMetrics.chunkSizeX;
-        cellCountZ = chunkCountZ * HexMetrics.chunkSizeZ;
-
-        CreateChunks();
-        CreateCells();
+        HexMetrics.colors = colors;
+        CreateMap(cellCountX, cellCountZ);
     }
 
     void OnEnable()
@@ -44,7 +38,35 @@ public class HexGrid : MonoBehaviour
         {
             HexMetrics.noiseSource = noiseSource;
             HexMetrics.InitializeHashGrid(seed);
+            HexMetrics.colors = colors;
         }
+    }
+
+    // Метод для создания карты
+    public void CreateMap(int x, int z)
+    {
+        if (
+            x <= 0 || x % HexMetrics.chunkSizeX != 0 ||
+            z <= 0 || z % HexMetrics.chunkSizeZ != 0
+        )
+        {
+            Debug.LogError("Unsupported map size.");
+            return;
+        }
+        if (chunks != null)
+        {
+            for (int i = 0; i < chunks.Length; i++)
+            {
+                Destroy(chunks[i].gameObject);
+            }
+        }
+
+        cellCountX = x;
+        cellCountZ = z;
+        chunkCountX = cellCountX / HexMetrics.chunkSizeX;
+        chunkCountZ = cellCountZ / HexMetrics.chunkSizeZ;
+        CreateChunks();
+        CreateCells();
     }
 
     // Метод для создания фрагментов
@@ -93,7 +115,6 @@ public class HexGrid : MonoBehaviour
         HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
         cell.transform.localPosition = position;
         cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
-        cell.Color = defaultColor;
 
         // Соединение соседей
 

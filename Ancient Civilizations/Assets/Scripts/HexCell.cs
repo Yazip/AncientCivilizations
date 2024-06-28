@@ -6,7 +6,7 @@ public class HexCell : MonoBehaviour
 
     public HexCoordinates coordinates;
 
-    Color color;
+    int terrainTypeIndex;
 
     [SerializeField]
     HexCell[] neighbors;
@@ -28,16 +28,7 @@ public class HexCell : MonoBehaviour
                 return;
             }
             elevation = value;
-            Vector3 position = transform.localPosition;
-            position.y = value * HexMetrics.elevationStep;
-            position.y +=
-                (HexMetrics.SampleNoise(position).y * 2f - 1f) *
-                HexMetrics.elevationPerturbStrength;
-            transform.localPosition = position;
-
-            Vector3 uiPosition = uiRect.localPosition;
-            uiPosition.z = -position.y;
-            uiRect.localPosition = uiPosition;
+            RefreshPosition();
             Refresh();
         }
     }
@@ -54,16 +45,23 @@ public class HexCell : MonoBehaviour
     {
         get
         {
-            return color;
+            return HexMetrics.colors[terrainTypeIndex];
+        }
+    }
+
+    public int TerrainTypeIndex
+    {
+        get
+        {
+            return terrainTypeIndex;
         }
         set
         {
-            if (color == value)
+            if (terrainTypeIndex != value)
             {
-                return;
+                terrainTypeIndex = value;
+                Refresh();
             }
-            color = value;
-            Refresh();
         }
     }
 
@@ -107,6 +105,20 @@ public class HexCell : MonoBehaviour
     void RefreshSelfOnly()
     {
         chunk.Refresh();
+    }
+
+    void RefreshPosition()
+    {
+        Vector3 position = transform.localPosition;
+        position.y = elevation * HexMetrics.elevationStep;
+        position.y +=
+            (HexMetrics.SampleNoise(position).y * 2f - 1f) *
+            HexMetrics.elevationPerturbStrength;
+        transform.localPosition = position;
+
+        Vector3 uiPosition = uiRect.localPosition;
+        uiPosition.z = -position.y;
+        uiRect.localPosition = uiPosition;
     }
 
     // Метод для задания соседа
