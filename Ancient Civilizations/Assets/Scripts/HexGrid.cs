@@ -43,7 +43,7 @@ public class HexGrid : MonoBehaviour
     }
 
     // Метод для создания карты
-    public void CreateMap(int x, int z)
+    public bool CreateMap(int x, int z)
     {
         if (
             x <= 0 || x % HexMetrics.chunkSizeX != 0 ||
@@ -51,7 +51,7 @@ public class HexGrid : MonoBehaviour
         )
         {
             Debug.LogError("Unsupported map size.");
-            return;
+            return false;
         }
         if (chunks != null)
         {
@@ -67,6 +67,7 @@ public class HexGrid : MonoBehaviour
         chunkCountZ = cellCountZ / HexMetrics.chunkSizeZ;
         CreateChunks();
         CreateCells();
+        return true;
     }
 
     // Метод для создания фрагментов

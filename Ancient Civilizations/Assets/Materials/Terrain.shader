@@ -1,9 +1,10 @@
-Shader "Custom/VertexColors"
+Shader "Custom/Terrain"
 {
     Properties
     {
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
+        _GridTex ("Grid Texture", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
     }
@@ -17,14 +18,19 @@ Shader "Custom/VertexColors"
         #pragma surface surf Standard fullforwardshadows
 
         // Use shader model 3.0 target, to get nicer looking lighting
-        #pragma target 3.0
+        #pragma target 3.5
+
+        #pragma multi_compile _ GRID_ON
 
         sampler2D _MainTex;
+
+        sampler2D _GridTex;
 
         struct Input
         {
             float2 uv_MainTex;
             float4 color : COLOR;
+            float3 worldPos;
         };
 
         half _Glossiness;
@@ -40,9 +46,17 @@ Shader "Custom/VertexColors"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
+            float2 uv = IN.worldPos.xz * 0.02;
             // Albedo comes from a texture tinted by color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = c.rgb * IN.color;
+            fixed4 grid = 1;
+            #if defined(GRID_ON)
+				float2 gridUV = IN.worldPos.xz;
+				gridUV.x *= 1 / (4 * 8.66025404);
+				gridUV.y *= 1 / (2 * 15.0);
+				grid = tex2D(_GridTex, gridUV);
+			#endif
+            o.Albedo = c.rgb * grid * IN.color;
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
