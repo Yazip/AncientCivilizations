@@ -74,13 +74,13 @@ public class HexMapEditor : MonoBehaviour
                 searchFromCell.EnableHighlight(Color.blue);
                 if (searchToCell)
                 {
-                    hexGrid.FindPath(searchFromCell, searchToCell);
+                    hexGrid.FindPath(searchFromCell, searchToCell, 10);
                 }
             }
             else if (searchFromCell && searchFromCell != currentCell)
             {
                 searchToCell = currentCell;
-                hexGrid.FindPath(searchFromCell, searchToCell);
+                hexGrid.FindPath(searchFromCell, searchToCell, 10);
             }
             previousCell = currentCell;
             isDrag = true;

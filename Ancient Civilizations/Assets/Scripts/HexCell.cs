@@ -92,7 +92,6 @@ public class HexCell : MonoBehaviour
         set
         {
             distance = value;
-            UpdateDistanceLabel();
         }
     }
 
@@ -159,11 +158,11 @@ public class HexCell : MonoBehaviour
         cell.neighbors[(int)direction.Opposite()] = this;
     }
 
-    // Метод для обновления метки дистанции
-    void UpdateDistanceLabel()
+    // Метод для задания текста метки
+    public void SetLabel(string text)
     {
         TMP_Text label = uiRect.GetComponent<TMP_Text>();
-        label.text = distance == int.MaxValue ? "" : distance.ToString();
+        label.text = text;
     }
 
     // Методы для включения/выключения выделения ячеек
