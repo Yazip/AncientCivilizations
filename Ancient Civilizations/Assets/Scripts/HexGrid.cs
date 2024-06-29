@@ -1,5 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 public class HexGrid : MonoBehaviour
 {
@@ -202,9 +204,39 @@ public class HexGrid : MonoBehaviour
     // Метод для нахождения расстояний до ячеек
     public void FindDistancesTo(HexCell cell)
     {
+        StopAllCoroutines();
+        StartCoroutine(Search(cell));
+    }
+
+    IEnumerator Search(HexCell cell)
+    {
         for (int i = 0; i < cells.Length; i++)
         {
-            cells[i].Distance = cell.coordinates.DistanceTo(cells[i].coordinates);
+            cells[i].Distance = int.MaxValue;
+        }
+
+        WaitForSeconds delay = new WaitForSeconds(1 / 60f);
+        Queue<HexCell> frontier = new Queue<HexCell>();
+        cell.Distance = 0;
+        frontier.Enqueue(cell);
+        while (frontier.Count > 0)
+        {
+            yield return delay;
+            HexCell current = frontier.Dequeue();
+            for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
+            {
+                HexCell neighbor = current.GetNeighbor(d);
+                if (neighbor == null || neighbor.Distance != int.MaxValue)
+                {
+                    continue;
+                }
+                if (current.GetEdgeType(neighbor) == HexEdgeType.Cliff)
+                {
+                    continue;
+                }
+                neighbor.Distance = current.Distance + 1;
+                frontier.Enqueue(neighbor);
+            }
         }
     }
 }
