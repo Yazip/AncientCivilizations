@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class HexCell : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class HexCell : MonoBehaviour
     public RectTransform uiRect;
 
     int elevation = int.MinValue;
+
+    int distance;
 
     public int Elevation
     {
@@ -62,6 +65,19 @@ public class HexCell : MonoBehaviour
                 terrainTypeIndex = value;
                 Refresh();
             }
+        }
+    }
+
+    public int Distance
+    {
+        get
+        {
+            return distance;
+        }
+        set
+        {
+            distance = value;
+            UpdateDistanceLabel();
         }
     }
 
@@ -126,5 +142,12 @@ public class HexCell : MonoBehaviour
     {
         neighbors[(int)direction] = cell;
         cell.neighbors[(int)direction.Opposite()] = this;
+    }
+
+    // Метод для обновления метки дистанции
+    void UpdateDistanceLabel()
+    {
+        TMP_Text label = uiRect.GetComponent<TMP_Text>();
+        label.text = distance.ToString();
     }
 }

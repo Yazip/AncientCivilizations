@@ -143,7 +143,7 @@ public class HexGrid : MonoBehaviour
             }
         }
 
-        // Выводим координаты ячейки в виде текста на ней
+        // Выводим текст на ячейке
 
         TMP_Text label = Instantiate<TMP_Text>(cellLabelPrefab);
         label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
@@ -196,6 +196,15 @@ public class HexGrid : MonoBehaviour
         for (int i = 0; i < chunks.Length; i++)
         {
             chunks[i].ShowUI(visible);
+        }
+    }
+
+    // Метод для нахождения расстояний до ячеек
+    public void FindDistancesTo(HexCell cell)
+    {
+        for (int i = 0; i < cells.Length; i++)
+        {
+            cells[i].Distance = cell.coordinates.DistanceTo(cells[i].coordinates);
         }
     }
 }
