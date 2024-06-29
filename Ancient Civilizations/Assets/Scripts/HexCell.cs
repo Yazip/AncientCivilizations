@@ -23,6 +23,8 @@ public class HexCell : MonoBehaviour
 
     public int SearchHeuristic { get; set; }
 
+    public HexCell NextWithSamePriority { get; set; }
+
     public int SearchPriority
     {
         get
