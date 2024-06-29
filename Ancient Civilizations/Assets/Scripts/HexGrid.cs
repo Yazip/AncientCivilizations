@@ -216,26 +216,38 @@ public class HexGrid : MonoBehaviour
         }
 
         WaitForSeconds delay = new WaitForSeconds(1 / 60f);
-        Queue<HexCell> frontier = new Queue<HexCell>();
+        List<HexCell> frontier = new List<HexCell>();
         cell.Distance = 0;
-        frontier.Enqueue(cell);
+        frontier.Add(cell);
         while (frontier.Count > 0)
         {
             yield return delay;
-            HexCell current = frontier.Dequeue();
+            HexCell current = frontier[0];
+            frontier.RemoveAt(0);
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
             {
                 HexCell neighbor = current.GetNeighbor(d);
-                if (neighbor == null || neighbor.Distance != int.MaxValue)
+                if (neighbor == null)
                 {
                     continue;
                 }
-                if (current.GetEdgeType(neighbor) == HexEdgeType.Cliff)
+                HexEdgeType edgeType = current.GetEdgeType(neighbor);
+                if (edgeType == HexEdgeType.Cliff)
                 {
                     continue;
                 }
-                neighbor.Distance = current.Distance + 1;
-                frontier.Enqueue(neighbor);
+                int distance = current.Distance;
+                distance += edgeType == HexEdgeType.Flat ? 1 : 5;
+                if (neighbor.Distance == int.MaxValue)
+                {
+                    neighbor.Distance = distance;
+                    frontier.Add(neighbor);
+                }
+                else if (distance < neighbor.Distance)
+                {
+                    neighbor.Distance = distance;
+                }
+                frontier.Sort((x, y) => x.Distance.CompareTo(y.Distance));
             }
         }
     }
