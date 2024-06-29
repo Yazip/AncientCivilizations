@@ -20,6 +20,8 @@ public class HexMapEditor : MonoBehaviour
 
     public Material terrainMaterial;
 
+    bool editMode;
+
     enum OptionalToggle
     {
         Ignore, Yes, No
@@ -58,7 +60,10 @@ public class HexMapEditor : MonoBehaviour
             {
                 isDrag = false;
             }
-            EditCells(currentCell);
+            if (editMode)
+            {
+                EditCells(currentCell);
+            }
             previousCell = currentCell;
             isDrag = true;
         }
@@ -148,12 +153,6 @@ public class HexMapEditor : MonoBehaviour
         brushSize = (int)size;
     }
 
-    // Метод для активации/деактивации UI
-    public void ShowUI(bool visible)
-    {
-        hexGrid.ShowUI(visible);
-    }
-
     // Метод для включения/выключения сетки
     public void ShowGrid(bool visible)
     {
@@ -165,5 +164,12 @@ public class HexMapEditor : MonoBehaviour
         {
             terrainMaterial.DisableKeyword("GRID_ON");
         }
+    }
+
+    // Метод для включения/выключения режима редактирования
+    public void SetEditMode(bool toggle)
+    {
+        editMode = toggle;
+        hexGrid.ShowUI(!toggle);
     }
 }
