@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class HexCell : MonoBehaviour
@@ -149,5 +150,19 @@ public class HexCell : MonoBehaviour
     {
         TMP_Text label = uiRect.GetComponent<TMP_Text>();
         label.text = distance == int.MaxValue ? "" : distance.ToString();
+    }
+
+    // Методы для включения/выключения выделения ячеек
+    public void DisableHighlight()
+    {
+        Image highlight = uiRect.GetChild(0).GetComponent<Image>();
+        highlight.enabled = false;
+    }
+
+    public void EnableHighlight(Color color)
+    {
+        Image highlight = uiRect.GetChild(0).GetComponent<Image>();
+        highlight.color = color;
+        highlight.enabled = true;
     }
 }
