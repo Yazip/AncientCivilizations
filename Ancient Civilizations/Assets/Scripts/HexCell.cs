@@ -19,6 +19,8 @@ public class HexCell : MonoBehaviour
 
     int distance;
 
+    public HexCell PathFrom { get; set; }
+
     public int Elevation
     {
         get
