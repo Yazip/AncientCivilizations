@@ -1,12 +1,18 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class HexUnit : MonoBehaviour
 {
+    const float travelSpeed = 4f;
+
     HexCell location;
 
     float orientation;
 
     public static HexUnit unitPrefab;
+
+    List<HexCell> pathToTravel;
 
     public HexCell Location
     {
@@ -39,6 +45,14 @@ public class HexUnit : MonoBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        if (location)
+        {
+            transform.localPosition = location.Position;
+        }
+    }
+
     public void ValidateLocation()
     {
         transform.localPosition = location.Position;
@@ -54,5 +68,28 @@ public class HexUnit : MonoBehaviour
     {
         location.Unit = null;
         Destroy(gameObject);
+    }
+
+    // Метод для перемещения юнита по пути
+    public void Travel(List<HexCell> path)
+    {
+        Location = path[path.Count - 1];
+        pathToTravel = path;
+        StopAllCoroutines();
+        StartCoroutine(TravelPath());
+    }
+
+    IEnumerator TravelPath()
+    {
+        for (int i = 1; i < pathToTravel.Count; i++)
+        {
+            Vector3 a = pathToTravel[i - 1].Position;
+            Vector3 b = pathToTravel[i].Position;
+            for (float t = 0f; t < 1f; t += Time.deltaTime * travelSpeed)
+            {
+                transform.localPosition = Vector3.Lerp(a, b, t);
+                yield return null;
+            }
+        }
     }
 }
