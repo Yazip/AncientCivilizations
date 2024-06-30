@@ -6,6 +6,8 @@ public class HexUnit : MonoBehaviour
 {
     const float travelSpeed = 4f;
 
+    const float rotationSpeed = 180f;
+
     HexCell location;
 
     float orientation;
@@ -82,6 +84,8 @@ public class HexUnit : MonoBehaviour
     IEnumerator TravelPath()
     {
         Vector3 a, b, c = pathToTravel[0].Position;
+        transform.localPosition = c;
+        yield return LookAt(pathToTravel[1].Position);
 
         float t = Time.deltaTime * travelSpeed;
         for (int i = 1; i < pathToTravel.Count; i++)
@@ -92,6 +96,9 @@ public class HexUnit : MonoBehaviour
             for (; t < 1f; t += Time.deltaTime * travelSpeed)
             {
                 transform.localPosition = Bezier.GetPoint(a, b, c, t);
+                Vector3 d = Bezier.GetDerivative(a, b, c, t);
+                d.y = 0f;
+                transform.localRotation = Quaternion.LookRotation(d);
                 yield return null;
             }
             t -= 1f;
@@ -103,8 +110,35 @@ public class HexUnit : MonoBehaviour
         for (; t < 1f; t += Time.deltaTime * travelSpeed)
         {
             transform.localPosition = Bezier.GetPoint(a, b, c, t);
+            Vector3 d = Bezier.GetDerivative(a, b, c, t);
+            d.y = 0f;
+            transform.localRotation = Quaternion.LookRotation(d);
             yield return null;
         }
         transform.localPosition = location.Position;
+        orientation = transform.localRotation.eulerAngles.y;
+        ListPool<HexCell>.Add(pathToTravel);
+        pathToTravel = null;
+    }
+
+    IEnumerator LookAt(Vector3 point)
+    {
+        point.y = transform.localPosition.y;
+        Quaternion fromRotation = transform.localRotation;
+        Quaternion toRotation = Quaternion.LookRotation(point - transform.localPosition);
+        float angle = Quaternion.Angle(fromRotation, toRotation);
+
+        if (angle > 0f)
+        {
+            float speed = rotationSpeed / angle;
+            for (float t = Time.deltaTime * speed; t < 1f; t += Time.deltaTime * speed)
+            {
+                transform.localRotation = Quaternion.Slerp(fromRotation, toRotation, t);
+                yield return null;
+            }
+        }
+
+        transform.LookAt(point);
+        orientation = transform.localRotation.eulerAngles.y;
     }
 }
