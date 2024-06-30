@@ -16,13 +16,9 @@ public class HexMapEditor : MonoBehaviour
 
     bool isDrag;
     HexDirection dragDirection;
-    HexCell previousCell, searchFromCell, searchToCell;
+    HexCell previousCell;
 
     public Material terrainMaterial;
-
-    bool editMode;
-
-    public HexUnit unitPrefab;
 
     enum OptionalToggle
     {
@@ -32,6 +28,7 @@ public class HexMapEditor : MonoBehaviour
     void Awake()
     {
         terrainMaterial.DisableKeyword("GRID_ON");
+        SetEditMode(false);
     }
 
     void Update()
@@ -73,34 +70,7 @@ public class HexMapEditor : MonoBehaviour
             {
                 isDrag = false;
             }
-            if (editMode)
-            {
-                EditCells(currentCell);
-            }
-            else if (Input.GetKey(KeyCode.LeftShift) && searchToCell != currentCell)
-            {
-                if (searchFromCell != currentCell)
-                {
-                    if (searchFromCell)
-                    {
-                        searchFromCell.DisableHighlight();
-                    }
-                    searchFromCell = currentCell;
-                    searchFromCell.EnableHighlight(Color.blue);
-                    if (searchToCell)
-                    {
-                        hexGrid.FindPath(searchFromCell, searchToCell, 10);
-                    }
-                }
-            }
-            else if (searchFromCell && searchFromCell != currentCell)
-            {
-                if (searchToCell != currentCell)
-                {
-                    searchToCell = currentCell;
-                    hexGrid.FindPath(searchFromCell, searchToCell, 10);
-                }
-            }
+            EditCells(currentCell);
             previousCell = currentCell;
             isDrag = true;
         }
@@ -206,20 +176,13 @@ public class HexMapEditor : MonoBehaviour
     // Метод для включения/выключения режима редактирования
     public void SetEditMode(bool toggle)
     {
-        editMode = toggle;
-        hexGrid.ShowUI(!toggle);
+        enabled = toggle;
     }
 
     // Метод для получения ячейки под курсором при нажатии
     HexCell GetCellUnderCursor()
     {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(inputRay, out hit))
-        {
-            return hexGrid.GetCell(hit.point);
-        }
-        return null;
+        return hexGrid.GetCell(Camera.main.ScreenPointToRay(Input.mousePosition));
     }
 
     // Метод для создания юнита
@@ -228,10 +191,7 @@ public class HexMapEditor : MonoBehaviour
         HexCell cell = GetCellUnderCursor();
         if (cell && !cell.Unit)
         {
-            HexUnit unit = Instantiate(unitPrefab);
-            unit.transform.SetParent(hexGrid.transform, false);
-            unit.Location = cell;
-            unit.Orientation = Random.Range(0f, 360f);
+            hexGrid.AddUnit(Instantiate(HexUnit.unitPrefab), cell, Random.Range(0f, 360f));
         }
     }
 
@@ -241,7 +201,7 @@ public class HexMapEditor : MonoBehaviour
         HexCell cell = GetCellUnderCursor();
         if (cell && cell.Unit)
         {
-            cell.Unit.Die();
+            hexGrid.RemoveUnit(cell.Unit);
         }
     }
 }

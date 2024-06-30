@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 public class HexGrid : MonoBehaviour
 {
@@ -31,10 +32,23 @@ public class HexGrid : MonoBehaviour
     HexCell currentPathFrom, currentPathTo;
     bool currentPathExists;
 
+    List<HexUnit> units = new List<HexUnit>();
+
+    public HexUnit unitPrefab;
+
+    public bool HasPath
+    {
+        get
+        {
+            return currentPathExists;
+        }
+    }
+
     void Awake()
     {
         HexMetrics.noiseSource = noiseSource;
         HexMetrics.InitializeHashGrid(seed);
+        HexUnit.unitPrefab = unitPrefab;
         HexMetrics.colors = colors;
         CreateMap(cellCountX, cellCountZ);
     }
@@ -45,6 +59,7 @@ public class HexGrid : MonoBehaviour
         {
             HexMetrics.noiseSource = noiseSource;
             HexMetrics.InitializeHashGrid(seed);
+            HexUnit.unitPrefab = unitPrefab;
             HexMetrics.colors = colors;
         }
     }
@@ -61,6 +76,7 @@ public class HexGrid : MonoBehaviour
             return false;
         }
         ClearPath();
+        ClearUnits();
         if (chunks != null)
         {
             for (int i = 0; i < chunks.Length; i++)
@@ -174,7 +190,7 @@ public class HexGrid : MonoBehaviour
         chunk.AddCell(localX + localZ * HexMetrics.chunkSizeX, cell);
     }
 
-    // Метод для получения ячейки по позиции
+    // Метод для получения ячейки
     public HexCell GetCell(Vector3 position)
     {
         position = transform.InverseTransformPoint(position);
@@ -196,6 +212,16 @@ public class HexGrid : MonoBehaviour
             return null;
         }
         return cells[x + z * cellCountX];
+    }
+
+    public HexCell GetCell(Ray ray)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            return GetCell(hit.point);
+        }
+        return null;
     }
 
     // Метод для активации/деактивации UI
@@ -248,6 +274,10 @@ public class HexGrid : MonoBehaviour
             {
                 HexCell neighbor = current.GetNeighbor(d);
                 if (neighbor == null || neighbor.SearchPhase > searchFrontierPhase)
+                {
+                    continue;
+                }
+                if (neighbor.Unit)
                 {
                     continue;
                 }
@@ -304,7 +334,7 @@ public class HexGrid : MonoBehaviour
     }
 
     // Метод для очистки и отключения показа пути
-    void ClearPath()
+    public void ClearPath()
     {
         if (currentPathExists)
         {
@@ -319,5 +349,31 @@ public class HexGrid : MonoBehaviour
             currentPathExists = false;
         }
         currentPathFrom = currentPathTo = null;
+    }
+
+    // Метод для очистки карты от юнитов
+    void ClearUnits()
+    {
+        for (int i = 0; i < units.Count; i++)
+        {
+            units[i].Die();
+        }
+        units.Clear();
+    }
+
+    // Метод для добавления юнита к сетке
+    public void AddUnit(HexUnit unit, HexCell location, float orientation)
+    {
+        units.Add(unit);
+        unit.transform.SetParent(transform, false);
+        unit.Location = location;
+        unit.Orientation = orientation;
+    }
+
+    // Метод для удаления юнита из сетки
+    public void RemoveUnit(HexUnit unit)
+    {
+        units.Remove(unit);
+        unit.Die();
     }
 }
