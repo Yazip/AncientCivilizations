@@ -22,6 +22,8 @@ public class HexMapEditor : MonoBehaviour
 
     bool editMode;
 
+    public HexUnit unitPrefab;
+
     enum OptionalToggle
     {
         Ignore, Yes, No
@@ -34,24 +36,35 @@ public class HexMapEditor : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-            HandleInput();
+            if (Input.GetMouseButton(0))
+            {
+                HandleInput();
+                return;
+            }
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    DestroyUnit();
+                }
+                else
+                {
+                    CreateUnit();
+                }
+                return;
+            }
         }
-        else
-        {
-            previousCell = null;
-        }
+        previousCell = null;
     }
 
     // Метод для пуска на сцену луча из позиции курсора мыши
     void HandleInput()
     {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(inputRay, out hit))
+        HexCell currentCell = GetCellUnderCursor();
+        if (currentCell)
         {
-            HexCell currentCell = hexGrid.GetCell(hit.point);
             if (previousCell && previousCell != currentCell)
             {
                 ValidateDrag(currentCell);
@@ -195,5 +208,40 @@ public class HexMapEditor : MonoBehaviour
     {
         editMode = toggle;
         hexGrid.ShowUI(!toggle);
+    }
+
+    // Метод для получения ячейки под курсором при нажатии
+    HexCell GetCellUnderCursor()
+    {
+        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(inputRay, out hit))
+        {
+            return hexGrid.GetCell(hit.point);
+        }
+        return null;
+    }
+
+    // Метод для создания юнита
+    void CreateUnit()
+    {
+        HexCell cell = GetCellUnderCursor();
+        if (cell && !cell.Unit)
+        {
+            HexUnit unit = Instantiate(unitPrefab);
+            unit.transform.SetParent(hexGrid.transform, false);
+            unit.Location = cell;
+            unit.Orientation = Random.Range(0f, 360f);
+        }
+    }
+
+    // Метод для уничтожения юнита
+    void DestroyUnit()
+    {
+        HexCell cell = GetCellUnderCursor();
+        if (cell && cell.Unit)
+        {
+            cell.Unit.Die();
+        }
     }
 }

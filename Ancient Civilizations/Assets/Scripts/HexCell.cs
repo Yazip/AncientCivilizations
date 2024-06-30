@@ -27,6 +27,8 @@ public class HexCell : MonoBehaviour
 
     public int SearchPhase { get; set; }
 
+    public HexUnit Unit { get; set; }
+
     public int SearchPriority
     {
         get
@@ -131,12 +133,20 @@ public class HexCell : MonoBehaviour
                     neighbor.chunk.Refresh();
                 }
             }
+            if (Unit)
+            {
+                Unit.ValidateLocation();
+            }
         }
     }
 
     void RefreshSelfOnly()
     {
         chunk.Refresh();
+        if (Unit)
+        {
+            Unit.ValidateLocation();
+        }
     }
 
     void RefreshPosition()
