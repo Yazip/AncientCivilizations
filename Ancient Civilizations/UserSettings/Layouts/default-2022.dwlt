@@ -68,8 +68,8 @@ MonoBehaviour:
     y: 0
     width: 454
     height: 947
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 276, y: 71}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 13}
   m_Panes:
   - {fileID: 13}
@@ -94,8 +94,8 @@ MonoBehaviour:
     y: 0
     width: 366
     height: 561
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 201, y: 221}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -321,7 +321,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts
+    - Assets/Animations/OneHanded/Movement
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -329,17 +329,17 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Animations/OneHanded/Movement
   m_LastFoldersGridSize: -1
   m_LastProjectPath: "D:\\\u0423\u043D\u0438\u0432\u0435\u0440\\\u041F\u0440\u0430\u043A\u0442\u0438\u043A\u0430
     2 \u043A\u0443\u0440\u0441\\AncientCivilizations\\Ancient Civilizations"
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 3c5d0000
-    m_LastClickedID: 23868
-    m_ExpandedIDs: 00000000305d000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 79}
+    m_SelectedIDs: a05d0000
+    m_LastClickedID: 23968
+    m_ExpandedIDs: 00000000305d0000645d0000685d00006c5d0000745d0000785d0000805d0000985d000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -509,7 +509,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 30fbffff
+      m_ExpandedIDs: e2b8fdff0225feffa027feff8e72feff1a78feff6a5fffff1498ffff1898ffff1c98ffffe498ffffe898ffffec98fffff098fffff498fffff898fffffc98ffff30fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -863,9 +863,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -80.84473, y: -219.64221, z: 182.74962}
+    m_Target: {x: 140.64612, y: -134.38806, z: -232.62288}
     speed: 2
-    m_Value: {x: -80.84473, y: -219.64221, z: 182.74962}
+    m_Value: {x: 140.64612, y: -134.38806, z: -232.62288}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -911,13 +911,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.4003959, y: 0.19225714, z: -0.08571498, w: -0.89200085}
+    m_Target: {x: 0.06443561, y: 0.93459255, z: -0.23066175, w: 0.26360074}
     speed: 2
-    m_Value: {x: -0.4003374, y: 0.19222905, z: -0.08570246, w: -0.8918705}
+    m_Value: {x: 0.06442578, y: 0.93445, z: -0.23062655, w: 0.26356053}
   m_Size:
-    m_Target: 157.96606
+    m_Target: 169.28642
     speed: 2
-    m_Value: 157.96606
+    m_Value: 169.28642
   m_Ortho:
     m_Target: 0
     speed: 2

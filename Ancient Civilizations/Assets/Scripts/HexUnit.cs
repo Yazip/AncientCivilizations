@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 
 public class HexUnit : MonoBehaviour
 {
@@ -14,7 +15,13 @@ public class HexUnit : MonoBehaviour
 
     public static HexUnit unitPrefab;
 
+    public GameObject unitAssetPrefab;
+
     List<HexCell> pathToTravel;
+
+    public AnimatorController[] animatorControllers;
+
+    Animator unitAssetPrefabAnimator;
 
     public HexCell Location
     {
@@ -45,6 +52,11 @@ public class HexUnit : MonoBehaviour
             orientation = value;
             transform.localRotation = Quaternion.Euler(0f, value, 0f);
         }
+    }
+
+    private void Awake()
+    {
+        unitAssetPrefabAnimator = unitAssetPrefab.GetComponent<Animator>();
     }
 
     void OnEnable()
@@ -87,6 +99,7 @@ public class HexUnit : MonoBehaviour
         transform.localPosition = c;
         yield return LookAt(pathToTravel[1].Position);
 
+        unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[1];
         float t = Time.deltaTime * travelSpeed;
         for (int i = 1; i < pathToTravel.Count; i++)
         {
@@ -117,6 +130,7 @@ public class HexUnit : MonoBehaviour
         }
         transform.localPosition = location.Position;
         orientation = transform.localRotation.eulerAngles.y;
+        unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[0];
         ListPool<HexCell>.Add(pathToTravel);
         pathToTravel = null;
     }
