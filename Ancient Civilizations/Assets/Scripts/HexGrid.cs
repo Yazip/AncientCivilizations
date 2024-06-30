@@ -28,6 +28,9 @@ public class HexGrid : MonoBehaviour
 
     int searchFrontierPhase;
 
+    HexCell currentPathFrom, currentPathTo;
+    bool currentPathExists;
+
     void Awake()
     {
         HexMetrics.noiseSource = noiseSource;
@@ -57,6 +60,7 @@ public class HexGrid : MonoBehaviour
             Debug.LogError("Unsupported map size.");
             return false;
         }
+        ClearPath();
         if (chunks != null)
         {
             for (int i = 0; i < chunks.Length; i++)
@@ -206,14 +210,14 @@ public class HexGrid : MonoBehaviour
     // Метод для нахождения расстояний до ячеек
     public void FindPath(HexCell fromCell, HexCell toCell, int speed)
     {
-        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-        sw.Start();
-        Search(fromCell, toCell, speed);
-        sw.Stop();
-        Debug.Log(sw.ElapsedMilliseconds);
+        ClearPath();
+        currentPathFrom = fromCell;
+        currentPathTo = toCell;
+        currentPathExists = Search(fromCell, toCell, speed);
+        ShowPath(speed);
     }
 
-    void Search(HexCell fromCell, HexCell toCell, int speed)
+    bool Search(HexCell fromCell, HexCell toCell, int speed)
     {
         searchFrontierPhase += 2;
         if (searchFrontier == null)
@@ -225,13 +229,6 @@ public class HexGrid : MonoBehaviour
             searchFrontier.Clear();
         }
 
-        for (int i = 0; i < cells.Length; i++)
-        {
-            cells[i].SetLabel(null);
-            cells[i].DisableHighlight();
-        }
-        fromCell.EnableHighlight(Color.blue);
-
         fromCell.SearchPhase = searchFrontierPhase;
         fromCell.Distance = 0;
         searchFrontier.Enqueue(fromCell);
@@ -242,15 +239,7 @@ public class HexGrid : MonoBehaviour
 
             if (current == toCell)
             {
-                while (current != fromCell)
-                {
-                    int turn = current.Distance / speed;
-                    current.SetLabel(turn.ToString());
-                    current.EnableHighlight(Color.white);
-                    current = current.PathFrom;
-                }
-                toCell.EnableHighlight(Color.red);
-                break;
+                return true;
             }
 
             int currentTurn = current.Distance / speed;
@@ -293,5 +282,42 @@ public class HexGrid : MonoBehaviour
                 }
             }
         }
+        return false;
+    }
+
+    // Метод для показа пути
+    void ShowPath(int speed)
+    {
+        if (currentPathExists)
+        {
+            HexCell current = currentPathTo;
+            while (current != currentPathFrom)
+            {
+                int turn = current.Distance / speed;
+                current.SetLabel(turn.ToString());
+                current.EnableHighlight(Color.white);
+                current = current.PathFrom;
+            }
+        }
+        currentPathFrom.EnableHighlight(Color.blue);
+        currentPathTo.EnableHighlight(Color.red);
+    }
+
+    // Метод для очистки и отключения показа пути
+    void ClearPath()
+    {
+        if (currentPathExists)
+        {
+            HexCell current = currentPathTo;
+            while (current != currentPathFrom)
+            {
+                current.SetLabel(null);
+                current.DisableHighlight();
+                current = current.PathFrom;
+            }
+            current.DisableHighlight();
+            currentPathExists = false;
+        }
+        currentPathFrom = currentPathTo = null;
     }
 }
