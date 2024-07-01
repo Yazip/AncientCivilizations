@@ -14,16 +14,10 @@ public class HexMapEditor : MonoBehaviour
 
     int activeTerrainTypeIndex;
 
-    bool isDrag;
     HexDirection dragDirection;
     HexCell previousCell;
 
     public Material terrainMaterial;
-
-    enum OptionalToggle
-    {
-        Ignore, Yes, No
-    }
 
     void Awake()
     {
@@ -62,17 +56,8 @@ public class HexMapEditor : MonoBehaviour
         HexCell currentCell = GetCellUnderCursor();
         if (currentCell)
         {
-            if (previousCell && previousCell != currentCell)
-            {
-                ValidateDrag(currentCell);
-            }
-            else
-            {
-                isDrag = false;
-            }
             EditCells(currentCell);
             previousCell = currentCell;
-            isDrag = true;
         }
         else
         {
@@ -116,24 +101,6 @@ public class HexMapEditor : MonoBehaviour
                 cell.Elevation = activeElevation;
             }
         }
-    }
-
-    // Метод для проверки перетаскивания
-    void ValidateDrag(HexCell currentCell)
-    {
-        for (
-            dragDirection = HexDirection.NE;
-            dragDirection <= HexDirection.NW;
-            dragDirection++
-        )
-        {
-            if (previousCell.GetNeighbor(dragDirection) == currentCell)
-            {
-                isDrag = true;
-                return;
-            }
-        }
-        isDrag = false;
     }
 
     // Метод для выбора активного типа рельефа
@@ -191,7 +158,7 @@ public class HexMapEditor : MonoBehaviour
         HexCell cell = GetCellUnderCursor();
         if (cell && !cell.Unit)
         {
-            hexGrid.AddUnit(Instantiate(HexUnit.unitPrefab), cell, Random.Range(0f, 360f));
+            hexGrid.AddUnit(Instantiate(HexUnit.unitPrefab), cell, HexMapCamera.rotationAngle, 5);
         }
     }
 

@@ -17,7 +17,7 @@ public class HexMapCamera : MonoBehaviour
 
     public float rotationSpeed;
 
-    float rotationAngle;
+    public static float rotationAngle;
 
     static HexMapCamera instance;
 

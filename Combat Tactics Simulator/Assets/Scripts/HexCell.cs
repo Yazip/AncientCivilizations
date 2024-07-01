@@ -114,12 +114,6 @@ public class HexCell : MonoBehaviour
         return neighbors[(int)direction];
     }
 
-    public int GetElevationDifference(HexDirection direction)
-    {
-        int difference = elevation - GetNeighbor(direction).elevation;
-        return difference >= 0 ? difference : -difference;
-    }
-
     void Refresh()
     {
         if (chunk)
@@ -137,15 +131,6 @@ public class HexCell : MonoBehaviour
             {
                 Unit.ValidateLocation();
             }
-        }
-    }
-
-    void RefreshSelfOnly()
-    {
-        chunk.Refresh();
-        if (Unit)
-        {
-            Unit.ValidateLocation();
         }
     }
 

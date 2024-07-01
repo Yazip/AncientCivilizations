@@ -21,8 +21,6 @@ public class HexGrid : MonoBehaviour
 
     public Texture2D noiseSource;
 
-    public int seed;
-
     public Color[] colors;
 
     HexCellPriorityQueue searchFrontier;
@@ -32,7 +30,7 @@ public class HexGrid : MonoBehaviour
     HexCell currentPathFrom, currentPathTo;
     bool currentPathExists;
 
-    List<HexUnit> units = new List<HexUnit>();
+    public List<HexUnit> units = new List<HexUnit>();
 
     public HexUnit unitPrefab;
 
@@ -47,7 +45,6 @@ public class HexGrid : MonoBehaviour
     void Awake()
     {
         HexMetrics.noiseSource = noiseSource;
-        HexMetrics.InitializeHashGrid(seed);
         HexUnit.unitPrefab = unitPrefab;
         HexMetrics.colors = colors;
         CreateMap(cellCountX, cellCountZ);
@@ -58,7 +55,6 @@ public class HexGrid : MonoBehaviour
         if (!HexMetrics.noiseSource)
         {
             HexMetrics.noiseSource = noiseSource;
-            HexMetrics.InitializeHashGrid(seed);
             HexUnit.unitPrefab = unitPrefab;
             HexMetrics.colors = colors;
         }
@@ -366,12 +362,13 @@ public class HexGrid : MonoBehaviour
     }
 
     // Метод для добавления юнита к сетке
-    public void AddUnit(HexUnit unit, HexCell location, float orientation)
+    public void AddUnit(HexUnit unit, HexCell location, float orientation, int health)
     {
         units.Add(unit);
         unit.transform.SetParent(transform, false);
         unit.Location = location;
         unit.Orientation = orientation;
+        unit.Health = health;
     }
 
     // Метод для удаления юнита из сетки

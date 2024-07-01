@@ -24,6 +24,10 @@ public class HexModelUI : MonoBehaviour
                 {
                     DoMove();
                 }
+                else if (Input.GetKeyDown(KeyCode.G))
+                {
+                    selectedUnit.TakeDamage();
+                }
                 else
                 {
                     DoPathfinding();

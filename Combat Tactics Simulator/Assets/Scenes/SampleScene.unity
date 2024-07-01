@@ -767,13 +767,13 @@ MonoBehaviour:
   cellPrefab: {fileID: 8071554621907633282, guid: 3ad582c5e26a177479ab0c9b61d43feb, type: 3}
   cellLabelPrefab: {fileID: 609661567836283486, guid: 6f99e9125c7c7744db7f1382b7840cd1, type: 3}
   noiseSource: {fileID: 2800000, guid: 403b475f0a610fe4cab1af4697a34885, type: 3}
-  seed: 1234
   colors:
   - {r: 1, g: 1, b: 0, a: 0}
   - {r: 0, g: 0.5019608, b: 0, a: 0}
   - {r: 0, g: 0, b: 1, a: 0}
   - {r: 1, g: 0.64705884, b: 0, a: 0}
   - {r: 1, g: 1, b: 1, a: 0}
+  units: []
   unitPrefab: {fileID: 7223787164287447736, guid: 863fe43c71bfb424b82d70e38918f335, type: 3}
 --- !u!4 &179348450
 Transform:

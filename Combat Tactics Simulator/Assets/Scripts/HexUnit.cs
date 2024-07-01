@@ -23,6 +23,8 @@ public class HexUnit : MonoBehaviour
 
     Animator unitAssetPrefabAnimator;
 
+    public int Health { get; set; }
+
     public HexCell Location
     {
         get
@@ -77,6 +79,31 @@ public class HexUnit : MonoBehaviour
         return !cell.Unit;
     }
 
+    // Метод для получения урона
+    public void TakeDamage()
+    {
+        --Health;
+        StopAllCoroutines();
+        StartCoroutine(Damage());
+    }
+
+    IEnumerator Damage()
+    {
+        if (Health <= 0)
+        {
+            unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[4];
+            yield return new WaitForSeconds(1.267f);
+            unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[0];
+            Die();
+        }
+        else
+        {
+            unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[3];
+            yield return new WaitForSeconds(1.3f);
+            unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[0];
+        }
+    }
+    
     // Метод для уничтожения юнита
     public void Die()
     {

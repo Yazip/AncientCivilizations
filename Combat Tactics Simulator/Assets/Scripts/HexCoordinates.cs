@@ -56,11 +56,6 @@ public struct HexCoordinates
         return "(" + X.ToString() + ", " + Y.ToString() + ", " + Z.ToString() + ")";
     }
 
-    public string ToStringOnSeparateLines()
-    {
-        return X.ToString() + "\n" + Y.ToString() + "\n" + Z.ToString();
-    }
-
     // Метод для получения позиции в шестиугольных координатах
     public static HexCoordinates FromPosition(Vector3 position)
     {
