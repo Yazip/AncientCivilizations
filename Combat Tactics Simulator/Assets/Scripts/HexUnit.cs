@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Animations;
+using Unity.VisualScripting;
 
 public class HexUnit : MonoBehaviour
 {
@@ -22,6 +23,10 @@ public class HexUnit : MonoBehaviour
     public AnimatorController[] animatorControllers;
 
     Animator unitAssetPrefabAnimator;
+
+    GameObject gridObj;
+
+    HexGrid grid;
 
     public int Health { get; set; }
 
@@ -59,6 +64,8 @@ public class HexUnit : MonoBehaviour
     private void Awake()
     {
         unitAssetPrefabAnimator = unitAssetPrefab.GetComponent<Animator>();
+        gridObj = GameObject.Find("Hex Grid");
+        grid = gridObj.GetComponent<HexGrid>();
     }
 
     void OnEnable()
@@ -79,25 +86,43 @@ public class HexUnit : MonoBehaviour
         return !cell.Unit;
     }
 
+    // Метод для атаки
+    public void AttackUnit(HexUnit enemy)
+    {
+        StopAllCoroutines();
+        StartCoroutine(Attack(enemy));
+        enemy.TakeDamage(this);
+    }
+
+    IEnumerator Attack(HexUnit enemy)
+    {
+        yield return LookAt(enemy.Location.Position);
+        unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[2];
+        yield return new WaitForSeconds(1.4f);
+        unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[0];
+    }
+
     // Метод для получения урона
-    public void TakeDamage()
+    public void TakeDamage(HexUnit enemy)
     {
         --Health;
         StopAllCoroutines();
-        StartCoroutine(Damage());
+        StartCoroutine(Damage(enemy));
     }
 
-    IEnumerator Damage()
+    IEnumerator Damage(HexUnit enemy)
     {
         if (Health <= 0)
         {
+            yield return new WaitForSeconds(.4f);
             unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[4];
             yield return new WaitForSeconds(1.267f);
             unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[0];
-            Die();
+            grid.RemoveUnit(this);
         }
         else
         {
+            yield return LookAt(enemy.Location.Position);
             unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[3];
             yield return new WaitForSeconds(1.3f);
             unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[0];
@@ -112,15 +137,22 @@ public class HexUnit : MonoBehaviour
     }
 
     // Метод для перемещения юнита по пути
-    public void Travel(List<HexCell> path)
+    public void Travel(List<HexCell> path, HexUnit enemy = null)
     {
         Location = path[path.Count - 1];
         pathToTravel = path;
         StopAllCoroutines();
-        StartCoroutine(TravelPath());
+        if (enemy)
+        {
+            StartCoroutine(TravelPath(enemy));
+        }
+        else
+        {
+            StartCoroutine(TravelPath());
+        }
     }
 
-    IEnumerator TravelPath()
+    IEnumerator TravelPath(HexUnit enemy = null)
     {
         Vector3 a, b, c = pathToTravel[0].Position;
         transform.localPosition = c;
@@ -160,6 +192,10 @@ public class HexUnit : MonoBehaviour
         unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[0];
         ListPool<HexCell>.Add(pathToTravel);
         pathToTravel = null;
+        if (enemy)
+        {
+            AttackUnit(enemy);
+        }
     }
 
     IEnumerator LookAt(Vector3 point)

@@ -10,6 +10,12 @@ public class HexModelUI : MonoBehaviour
 
     HexUnit selectedUnit;
 
+    HexCell enemyCell;
+
+    bool isEnemyCell;
+
+    bool isEnemyNeighbor;
+
     void Update()
     {
         if (!EventSystem.current.IsPointerOverGameObject())
@@ -22,11 +28,21 @@ public class HexModelUI : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(1))
                 {
-                    DoMove();
-                }
-                else if (Input.GetKeyDown(KeyCode.G))
-                {
-                    selectedUnit.TakeDamage();
+                    if (isEnemyCell && enemyCell.Unit)
+                    {
+                        if (isEnemyNeighbor)
+                        {
+                            selectedUnit.AttackUnit(enemyCell.Unit);
+                        }
+                        else
+                        {
+                            DoMove(true);
+                        }
+                    }
+                    else
+                    {
+                        DoMove();
+                    }
                 }
                 else
                 {
@@ -71,9 +87,29 @@ public class HexModelUI : MonoBehaviour
     {
         if (UpdateCurrentCell())
         {
-            if (currentCell && selectedUnit.IsValidDestination(currentCell))
+            if (currentCell)
             {
-                grid.FindPath(selectedUnit.Location, currentCell, 10);
+                if (selectedUnit.IsValidDestination(currentCell))
+                {
+                    isEnemyCell = false;
+                    grid.FindPath(selectedUnit.Location, currentCell, 10);
+                }
+                else
+                {
+                    isEnemyCell = true;
+                    enemyCell = currentCell;
+                    grid.ClearPath();
+                    for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
+                    {
+                        if (currentCell == selectedUnit.Location.GetNeighbor(d))
+                        {
+                            isEnemyNeighbor = true;
+                            return;
+                        }
+                    }
+                    isEnemyNeighbor = false;
+                    grid.FindPath(selectedUnit.Location, currentCell.GetNeighbor((HexDirection)(Random.Range(0, 5))), 10);
+                }
             }
             else
             {
@@ -83,11 +119,19 @@ public class HexModelUI : MonoBehaviour
     }
 
     // Метод для движения
-    void DoMove()
+    void DoMove(bool attack = false)
     {
         if (grid.HasPath)
         {
-            selectedUnit.Travel(grid.GetPath());
+            if (attack)
+            {
+                selectedUnit.Travel(grid.GetPath(), enemyCell.Unit);
+                isEnemyNeighbor = true;
+            }
+            else
+            {
+                selectedUnit.Travel(grid.GetPath());
+            }
             grid.ClearPath();
         }
     }

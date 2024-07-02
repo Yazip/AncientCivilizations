@@ -378,6 +378,11 @@ public class HexGrid : MonoBehaviour
         unit.Die();
     }
 
+    public void RemoveUnitFromList(HexUnit unit)
+    {
+        units.Remove(unit);
+    }
+
     // Метод для получения пути
     public List<HexCell> GetPath()
     {
