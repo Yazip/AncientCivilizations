@@ -28,6 +28,14 @@ public class HexUnit : MonoBehaviour
 
     HexGrid grid;
 
+    public Material[] materials;
+
+    public GameObject dummyMesh;
+
+    Renderer dummyMeshRenderer;
+
+    int teamIndex;
+
     public int Health { get; set; }
 
     public HexCell Location
@@ -61,11 +69,25 @@ public class HexUnit : MonoBehaviour
         }
     }
 
+    public int TeamIndex
+    {
+        get
+        {
+            return teamIndex;
+        }
+        set
+        {
+            teamIndex = value;
+            dummyMeshRenderer.material = materials[teamIndex];
+        }
+    }
+
     private void Awake()
     {
         unitAssetPrefabAnimator = unitAssetPrefab.GetComponent<Animator>();
         gridObj = GameObject.Find("Hex Grid");
         grid = gridObj.GetComponent<HexGrid>();
+        dummyMeshRenderer = dummyMesh.GetComponent<Renderer>();
     }
 
     void OnEnable()
@@ -126,6 +148,7 @@ public class HexUnit : MonoBehaviour
             unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[3];
             yield return new WaitForSeconds(1.3f);
             unitAssetPrefabAnimator.runtimeAnimatorController = animatorControllers[0];
+            AttackUnit(enemy);
         }
     }
     

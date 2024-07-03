@@ -53,6 +53,10 @@ MonoBehaviour:
   - {fileID: 9100000, guid: d8e90e9806751254e9d4144fc7ee3d7c, type: 2}
   - {fileID: 9100000, guid: aa595dbe63237734cb918763f97f9ef2, type: 2}
   - {fileID: 9100000, guid: cf46434a751dc3f409cc9baba1a8e386, type: 2}
+  materials:
+  - {fileID: 2100000, guid: 67e8a1f2693265f40a48858d1cea8d85, type: 2}
+  - {fileID: 2100000, guid: 9f860df9ce9e1d14c8c066377b5e0942, type: 2}
+  dummyMesh: {fileID: 6814899962608747680}
 --- !u!65 &6328402386371494082
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -134,6 +138,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1946929530578207690, guid: 917e00053cb499241a1d42e2b2716532, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 67e8a1f2693265f40a48858d1cea8d85, type: 2}
     - target: {fileID: 3596748220834623885, guid: 917e00053cb499241a1d42e2b2716532, type: 3}
       propertyPath: m_Name
       value: SwordWarrior
@@ -151,5 +159,10 @@ GameObject:
 --- !u!4 &4073505081334980821 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1136994913350202544, guid: 917e00053cb499241a1d42e2b2716532, type: 3}
+  m_PrefabInstance: {fileID: 3981346531370488933}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6814899962608747680 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7625710152922714309, guid: 917e00053cb499241a1d42e2b2716532, type: 3}
   m_PrefabInstance: {fileID: 3981346531370488933}
   m_PrefabAsset: {fileID: 0}

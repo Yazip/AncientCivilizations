@@ -14,6 +14,8 @@ public class HexMapEditor : MonoBehaviour
 
     int activeTerrainTypeIndex;
 
+    int activeUnitTeamIndex;
+
     HexDirection dragDirection;
     HexCell previousCell;
 
@@ -140,6 +142,12 @@ public class HexMapEditor : MonoBehaviour
         }
     }
 
+    // Метод для выбора активной команды юнита
+    public void SetUnitTeamIndex(int index)
+    {
+        activeUnitTeamIndex = index;
+    }
+
     // Метод для включения/выключения режима редактирования
     public void SetEditMode(bool toggle)
     {
@@ -158,7 +166,7 @@ public class HexMapEditor : MonoBehaviour
         HexCell cell = GetCellUnderCursor();
         if (cell && !cell.Unit)
         {
-            hexGrid.AddUnit(Instantiate(HexUnit.unitPrefab), cell, HexMapCamera.rotationAngle, 5);
+            hexGrid.AddUnit(Instantiate(HexUnit.unitPrefab), cell, HexMapCamera.rotationAngle, 5, activeUnitTeamIndex);
         }
     }
 

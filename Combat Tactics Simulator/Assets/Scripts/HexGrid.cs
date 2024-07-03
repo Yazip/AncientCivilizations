@@ -362,13 +362,14 @@ public class HexGrid : MonoBehaviour
     }
 
     // Метод для добавления юнита к сетке
-    public void AddUnit(HexUnit unit, HexCell location, float orientation, int health)
+    public void AddUnit(HexUnit unit, HexCell location, float orientation, int health, int unitTeamIndex)
     {
         units.Add(unit);
         unit.transform.SetParent(transform, false);
         unit.Location = location;
         unit.Orientation = orientation;
         unit.Health = health;
+        unit.TeamIndex = unitTeamIndex;
     }
 
     // Метод для удаления юнита из сетки
