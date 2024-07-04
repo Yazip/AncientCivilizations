@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -6,61 +9,91 @@ public class HexModelUI : MonoBehaviour
     
     public HexGrid grid;
 
-    HexCell currentCell;
-
     HexUnit selectedUnit;
+
+    HexUnit selectedEnemy;
 
     HexCell enemyCell;
 
-    bool isEnemyCell;
-
     bool isEnemyNeighbor;
+
+    List<HexUnit> units;
+
+    int redUnitsCount;
+
+    int blueUnitsCount;
+
+    private void Awake()
+    {
+        SetEditMode(true);
+    }
 
     void Update()
     {
-        if (!EventSystem.current.IsPointerOverGameObject())
+        units = grid.Units;
+        units.Shuffle();
+        redUnitsCount = grid.RedUnitsCount;
+        blueUnitsCount = grid.BlueUnitsCount;
+        if ((units.Count > 1) && (redUnitsCount != 0) && (blueUnitsCount != 0))
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                DoSelection();
-            }
-            else if (selectedUnit)
-            {
-                if (Input.GetMouseButtonDown(1))
-                {
-                    if (isEnemyCell && enemyCell.Unit)
-                    {
-                        if (isEnemyNeighbor)
-                        {
-                            selectedUnit.AttackUnit(enemyCell.Unit);
-                        }
-                        else
-                        {
-                            DoMove(true);
-                        }
-                    }
-                    else
-                    {
-                        DoMove();
-                    }
-                }
-                else
-                {
-                    DoPathfinding();
-                }
-            }
+            StopAllCoroutines();
+            StartCoroutine(ModelCoroutine());
         }
     }
 
-    bool UpdateCurrentCell()
+    IEnumerator ModelCoroutine()
     {
-        HexCell cell = grid.GetCell(Camera.main.ScreenPointToRay(Input.mousePosition));
-        if (cell != currentCell)
+        for (int i = 0; i < units.Count; i++)
         {
-            currentCell = cell;
-            return true;
+            selectedUnit = units[i];
+            if (selectedUnit && (selectedUnit.Opponent == null))
+            {
+                HexUnit targetEnemy = null;
+                int minPathCount = int.MaxValue;
+                List<HexCell> minPath = null;
+                for (int j = 0; j < units.Count; j++)
+                {
+                    selectedEnemy = units[j];
+                    if (selectedEnemy && (selectedUnit != selectedEnemy) && (selectedEnemy.Opponent == null) && (selectedUnit.TeamIndex != selectedEnemy.TeamIndex))
+                    {
+                        enemyCell = selectedEnemy.Location;
+                        DoPathfinding();
+                        if (isEnemyNeighbor)
+                        {
+                            targetEnemy = selectedEnemy;
+                            selectedUnit.Opponent = targetEnemy;
+                            targetEnemy.Opponent = selectedUnit;
+                            break;
+                        }
+                        else if (grid.HasPath)
+                        {
+                            List<HexCell> path = grid.GetPath();
+                            if (path.Count < minPathCount)
+                            {
+                                targetEnemy = selectedEnemy;
+                                minPath = path;
+                                minPathCount = path.Count;
+                            }
+                        }
+                    }
+                }
+                if (targetEnemy && (minPath != null || isEnemyNeighbor))
+                {
+                    if (isEnemyNeighbor)
+                    {
+                        selectedUnit.AttackUnit(targetEnemy);
+                        yield return null;
+                    }
+                    else
+                    {
+                        selectedUnit.Opponent = targetEnemy;
+                        targetEnemy.Opponent = selectedUnit;
+                        DoMove(minPath, targetEnemy);
+                        yield return null;
+                    }
+                }
+            }
         }
-        return false;
     }
 
     // Метод для включения/отключения режима редактирования
@@ -69,70 +102,56 @@ public class HexModelUI : MonoBehaviour
         enabled = !toggle;
         grid.ShowUI(!toggle);
         grid.ClearPath();
-    }
-
-    // Метод для выбора юнита
-    void DoSelection()
-    {
-        grid.ClearPath();
-        UpdateCurrentCell();
-        if (currentCell)
+        if (toggle == true)
         {
-            selectedUnit = currentCell.Unit;
+            grid.ClearUnits();
         }
     }
 
     // Метод для нахождения пути
     void DoPathfinding()
     {
-        if (UpdateCurrentCell())
+        grid.ClearPath();
+        for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
         {
-            if (currentCell)
+            HexCell neighbor = selectedUnit.Location.GetNeighbor(d);
+            if ((enemyCell == neighbor) && (selectedUnit.Location.GetEdgeType(neighbor) != HexEdgeType.Cliff))
             {
-                if (selectedUnit.IsValidDestination(currentCell))
-                {
-                    isEnemyCell = false;
-                    grid.FindPath(selectedUnit.Location, currentCell, 10);
-                }
-                else
-                {
-                    isEnemyCell = true;
-                    enemyCell = currentCell;
-                    grid.ClearPath();
-                    for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
-                    {
-                        if (currentCell == selectedUnit.Location.GetNeighbor(d))
-                        {
-                            isEnemyNeighbor = true;
-                            return;
-                        }
-                    }
-                    isEnemyNeighbor = false;
-                    grid.FindPath(selectedUnit.Location, currentCell.GetNeighbor((HexDirection)(Random.Range(0, 5))), 10);
-                }
+                isEnemyNeighbor = true;
+                return;
             }
-            else
+        }
+        isEnemyNeighbor = false;
+        int neighborCount = 0;
+        int neighborUnitsCount = 0;
+        List<HexCell> freeNeighbors = new List<HexCell>();
+        for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
+        {
+            HexCell neighbor = enemyCell.GetNeighbor(d);
+            if (neighbor)
             {
-                grid.ClearPath();
+                if (neighbor.Unit)
+                {
+                    ++neighborUnitsCount;
+                }
+                else if (enemyCell.GetEdgeType(neighbor) != HexEdgeType.Cliff)
+                {
+                    freeNeighbors.Add(neighbor);
+                }
+                ++neighborCount;
             }
+        }
+        if ((neighborUnitsCount != neighborCount) && (freeNeighbors.Count != 0))
+        {
+            HexCell toCell = freeNeighbors[Random.Range(0, (freeNeighbors.Count - 1))];
+            grid.FindPath(selectedUnit.Location, toCell, 10);
         }
     }
 
     // Метод для движения
-    void DoMove(bool attack = false)
+    void DoMove(List<HexCell> path, HexUnit enemy = null)
     {
-        if (grid.HasPath)
-        {
-            if (attack)
-            {
-                selectedUnit.Travel(grid.GetPath(), enemyCell.Unit);
-                isEnemyNeighbor = true;
-            }
-            else
-            {
-                selectedUnit.Travel(grid.GetPath());
-            }
-            grid.ClearPath();
-        }
+        selectedUnit.Travel(path, enemy);
+        grid.ClearPath();
     }
 }

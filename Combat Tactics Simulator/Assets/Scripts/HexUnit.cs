@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Animations;
 using Unity.VisualScripting;
+using static UnityEngine.UI.CanvasScaler;
 
 public class HexUnit : MonoBehaviour
 {
@@ -37,6 +38,8 @@ public class HexUnit : MonoBehaviour
     int teamIndex;
 
     public int Health { get; set; }
+
+    public HexUnit Opponent { get; set; }
 
     public HexCell Location
     {
@@ -151,10 +154,13 @@ public class HexUnit : MonoBehaviour
             AttackUnit(enemy);
         }
     }
-    
+
     // Метод для уничтожения юнита
     public void Die()
     {
+        if (Opponent != null)
+            Opponent.Opponent = null;
+        Opponent = null;
         location.Unit = null;
         Destroy(gameObject);
     }

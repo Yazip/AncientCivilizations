@@ -30,7 +30,7 @@ public class HexGrid : MonoBehaviour
     HexCell currentPathFrom, currentPathTo;
     bool currentPathExists;
 
-    public List<HexUnit> units = new List<HexUnit>();
+    List<HexUnit> units = new List<HexUnit>();
 
     public HexUnit unitPrefab;
 
@@ -41,6 +41,18 @@ public class HexGrid : MonoBehaviour
             return currentPathExists;
         }
     }
+
+    public List<HexUnit> Units
+    {
+        get
+        {
+            return units;
+        }
+    }
+
+    public int RedUnitsCount { get; set; }
+
+    public int BlueUnitsCount { get; set; }
 
     void Awake()
     {
@@ -236,7 +248,6 @@ public class HexGrid : MonoBehaviour
         currentPathFrom = fromCell;
         currentPathTo = toCell;
         currentPathExists = Search(fromCell, toCell, speed);
-        ShowPath(speed);
     }
 
     bool Search(HexCell fromCell, HexCell toCell, int speed)
@@ -311,24 +322,6 @@ public class HexGrid : MonoBehaviour
         return false;
     }
 
-    // Метод для показа пути
-    void ShowPath(int speed)
-    {
-        if (currentPathExists)
-        {
-            HexCell current = currentPathTo;
-            while (current != currentPathFrom)
-            {
-                int turn = (current.Distance - 1) / speed;
-                current.SetLabel(turn.ToString());
-                current.EnableHighlight(Color.white);
-                current = current.PathFrom;
-            }
-        }
-        currentPathFrom.EnableHighlight(Color.blue);
-        currentPathTo.EnableHighlight(Color.red);
-    }
-
     // Метод для очистки и отключения показа пути
     public void ClearPath()
     {
@@ -337,22 +330,15 @@ public class HexGrid : MonoBehaviour
             HexCell current = currentPathTo;
             while (current != currentPathFrom)
             {
-                current.SetLabel(null);
-                current.DisableHighlight();
                 current = current.PathFrom;
             }
-            current.DisableHighlight();
             currentPathExists = false;
-        }
-        else if (currentPathTo)
-        {
-            currentPathTo.DisableHighlight();
         }
         currentPathFrom = currentPathTo = null;
     }
 
     // Метод для очистки карты от юнитов
-    void ClearUnits()
+    public void ClearUnits()
     {
         for (int i = 0; i < units.Count; i++)
         {
@@ -370,18 +356,29 @@ public class HexGrid : MonoBehaviour
         unit.Orientation = orientation;
         unit.Health = health;
         unit.TeamIndex = unitTeamIndex;
+        if (unitTeamIndex == 0)
+        {
+            ++RedUnitsCount;
+        }
+        else if (unitTeamIndex == 1)
+        {
+            ++BlueUnitsCount;
+        }
     }
 
     // Метод для удаления юнита из сетки
     public void RemoveUnit(HexUnit unit)
     {
+        if (unit.TeamIndex == 0)
+        {
+            --RedUnitsCount;
+        }
+        else if (unit.TeamIndex == 1)
+        {
+            --BlueUnitsCount;
+        }
         units.Remove(unit);
         unit.Die();
-    }
-
-    public void RemoveUnitFromList(HexUnit unit)
-    {
-        units.Remove(unit);
     }
 
     // Метод для получения пути
