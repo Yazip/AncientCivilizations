@@ -3,7 +3,8 @@ using UnityEngine;
 public class NewMapMenu : MonoBehaviour
 {
 
-    public HexGrid hexGrid;
+    [SerializeField]
+    HexGrid hexGrid;
 
     public void Open()
     {

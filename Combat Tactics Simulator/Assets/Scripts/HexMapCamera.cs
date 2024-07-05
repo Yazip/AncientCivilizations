@@ -7,19 +7,32 @@ public class HexMapCamera : MonoBehaviour
 
     float zoom = 1f;
 
-    public float stickMinZoom, stickMaxZoom;
+    [SerializeField]
+    float stickMinZoom, stickMaxZoom;
 
-    public float swivelMinZoom, swivelMaxZoom;
+    [SerializeField]
+    float swivelMinZoom, swivelMaxZoom;
 
-    public float moveSpeedMinZoom, moveSpeedMaxZoom;
+    [SerializeField]
+    float moveSpeedMinZoom, moveSpeedMaxZoom;
 
-    public HexGrid grid;
+    [SerializeField]
+    HexGrid grid;
 
-    public float rotationSpeed;
+    [SerializeField]
+    float rotationSpeed;
 
-    public static float rotationAngle;
+    private static float rotationAngle;
 
     static HexMapCamera instance;
+
+    public static float RotationAngle
+    {
+        get
+        {
+            return rotationAngle;
+        }
+    }
 
     public static bool Locked
     {
@@ -107,10 +120,10 @@ public class HexMapCamera : MonoBehaviour
     // Метод для ограничения позиции, чтобы камера не вылетала за пределы карты
     Vector3 ClampPosition(Vector3 position)
     {
-        float xMax = (grid.cellCountX - 0.5f) * (2f * HexMetrics.innerRadius);
+        float xMax = (grid.CellCountX - 0.5f) * (2f * HexMetrics.innerRadius);
         position.x = Mathf.Clamp(position.x, 0f, xMax);
 
-        float zMax = (grid.cellCountZ - 1) * (1.5f * HexMetrics.outerRadius);
+        float zMax = (grid.CellCountZ - 1) * (1.5f * HexMetrics.outerRadius);
         position.z = Mathf.Clamp(position.z, 0f, zMax);
 
         return position;

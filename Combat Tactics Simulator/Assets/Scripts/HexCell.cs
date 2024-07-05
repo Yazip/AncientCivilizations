@@ -1,23 +1,20 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class HexCell : MonoBehaviour
 {
-    public HexGridChunk chunk;
-
-    public HexCoordinates coordinates;
 
     int terrainTypeIndex;
 
     [SerializeField]
     HexCell[] neighbors;
 
-    public RectTransform uiRect;
-
     int elevation = int.MinValue;
 
     int distance;
+
+    public HexGridChunk Chunk { get; set; }
+
+    public HexCoordinates Coordinates { get; set; }
 
     public HexCell PathFrom { get; set; }
 
@@ -67,7 +64,7 @@ public class HexCell : MonoBehaviour
     {
         get
         {
-            return HexMetrics.colors[terrainTypeIndex];
+            return HexMetrics.Colors[terrainTypeIndex];
         }
     }
 
@@ -116,15 +113,15 @@ public class HexCell : MonoBehaviour
 
     void Refresh()
     {
-        if (chunk)
+        if (Chunk)
         {
-            chunk.Refresh();
+            Chunk.Refresh();
             for (int i = 0; i < neighbors.Length; i++)
             {
                 HexCell neighbor = neighbors[i];
-                if (neighbor != null && neighbor.chunk != chunk)
+                if (neighbor != null && neighbor.Chunk != Chunk)
                 {
-                    neighbor.chunk.Refresh();
+                    neighbor.Chunk.Refresh();
                 }
             }
             if (Unit)
@@ -142,10 +139,6 @@ public class HexCell : MonoBehaviour
             (HexMetrics.SampleNoise(position).y * 2f - 1f) *
             HexMetrics.elevationPerturbStrength;
         transform.localPosition = position;
-
-        Vector3 uiPosition = uiRect.localPosition;
-        uiPosition.z = -position.y;
-        uiRect.localPosition = uiPosition;
     }
 
     // Метод для задания соседа
@@ -153,26 +146,5 @@ public class HexCell : MonoBehaviour
     {
         neighbors[(int)direction] = cell;
         cell.neighbors[(int)direction.Opposite()] = this;
-    }
-
-    // Метод для задания текста метки
-    public void SetLabel(string text)
-    {
-        TMP_Text label = uiRect.GetComponent<TMP_Text>();
-        label.text = text;
-    }
-
-    // Методы для включения/выключения выделения ячеек
-    public void DisableHighlight()
-    {
-        Image highlight = uiRect.GetChild(0).GetComponent<Image>();
-        highlight.enabled = false;
-    }
-
-    public void EnableHighlight(Color color)
-    {
-        Image highlight = uiRect.GetChild(0).GetComponent<Image>();
-        highlight.color = color;
-        highlight.enabled = true;
     }
 }

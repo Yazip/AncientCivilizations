@@ -1,9 +1,50 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public struct EdgeVertices
 {
 
-    public Vector3 v1, v2, v3, v4, v5;
+    Vector3 v1, v2, v3, v4, v5;
+    
+    public Vector3 V1
+    {
+        get
+        {
+            return v1;
+        }
+    }
+
+    public Vector3 V2
+    {
+        get
+        {
+            return v2;
+        }
+    }
+
+    public Vector3 V3
+    {
+        get
+        {
+            return v3;
+        }
+    }
+
+    public Vector3 V4
+    {
+        get
+        {
+            return v4;
+        }
+    }
+
+    public Vector3 V5
+    {
+        get
+        {
+            return v5;
+        }
+    }
 
     public EdgeVertices(Vector3 corner1, Vector3 corner2)
     {

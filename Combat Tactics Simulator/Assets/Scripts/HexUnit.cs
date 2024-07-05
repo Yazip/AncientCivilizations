@@ -2,8 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Animations;
-using Unity.VisualScripting;
-using static UnityEngine.UI.CanvasScaler;
 
 public class HexUnit : MonoBehaviour
 {
@@ -15,13 +13,13 @@ public class HexUnit : MonoBehaviour
 
     float orientation;
 
-    public static HexUnit unitPrefab;
-
-    public GameObject unitAssetPrefab;
+    [SerializeField]
+    GameObject unitAssetPrefab;
 
     List<HexCell> pathToTravel;
 
-    public AnimatorController[] animatorControllers;
+    [SerializeField]
+    AnimatorController[] animatorControllers;
 
     Animator unitAssetPrefabAnimator;
 
@@ -29,13 +27,17 @@ public class HexUnit : MonoBehaviour
 
     HexGrid grid;
 
-    public Material[] materials;
+    [SerializeField]
+    Material[] materials;
 
-    public GameObject dummyMesh;
+    [SerializeField]
+    GameObject dummyMesh;
 
     Renderer dummyMeshRenderer;
 
     int teamIndex;
+
+    public static HexUnit UnitPrefab { get; set; }
 
     public int Health { get; set; }
 
@@ -104,11 +106,6 @@ public class HexUnit : MonoBehaviour
     public void ValidateLocation()
     {
         transform.localPosition = location.Position;
-    }
-
-    public bool IsValidDestination(HexCell cell)
-    {
-        return !cell.Unit;
     }
 
     // Метод для атаки

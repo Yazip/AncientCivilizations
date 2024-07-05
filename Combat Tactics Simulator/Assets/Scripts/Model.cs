@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class HexModelUI : MonoBehaviour
+public class Model : MonoBehaviour
 {
-    
-    public HexGrid grid;
+
+    [SerializeField]
+    HexGrid grid;
 
     HexUnit selectedUnit;
 
@@ -100,7 +99,6 @@ public class HexModelUI : MonoBehaviour
     public void SetEditMode(bool toggle)
     {
         enabled = !toggle;
-        grid.ShowUI(!toggle);
         grid.ClearPath();
         if (toggle == true)
         {

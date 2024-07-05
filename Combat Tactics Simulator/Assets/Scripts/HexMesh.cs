@@ -12,7 +12,8 @@ public class HexMesh : MonoBehaviour
     [NonSerialized] List<int> triangles;
     MeshCollider meshCollider;
 
-    public bool useCollider, useColors, useUVCoordinates, useUV2Coordinates;
+    [SerializeField]
+    bool useCollider, useColors, useUVCoordinates, useUV2Coordinates;
 
     [NonSerialized] List<Vector2> uvs, uv2s;
 

@@ -4,7 +4,8 @@ using UnityEngine.EventSystems;
 public class HexMapEditor : MonoBehaviour
 {
 
-    public HexGrid hexGrid;
+    [SerializeField]
+    HexGrid hexGrid;
 
     int activeElevation;
 
@@ -16,10 +17,10 @@ public class HexMapEditor : MonoBehaviour
 
     int activeUnitTeamIndex;
 
-    HexDirection dragDirection;
     HexCell previousCell;
 
-    public Material terrainMaterial;
+    [SerializeField]
+    Material terrainMaterial;
 
     void Awake()
     {
@@ -70,8 +71,8 @@ public class HexMapEditor : MonoBehaviour
     // Метод для изменения ячеек
     void EditCells(HexCell center)
     {
-        int centerX = center.coordinates.X;
-        int centerZ = center.coordinates.Z;
+        int centerX = center.Coordinates.X;
+        int centerZ = center.Coordinates.Z;
 
         for (int r = 0, z = centerZ - brushSize; z <= centerZ; z++, r++)
         {
@@ -142,7 +143,7 @@ public class HexMapEditor : MonoBehaviour
         }
     }
 
-    // Метод для выбора активной команды юнита
+    // Метод для выбора активной фракции юнита
     public void SetUnitTeamIndex(int index)
     {
         activeUnitTeamIndex = index;
@@ -166,7 +167,7 @@ public class HexMapEditor : MonoBehaviour
         HexCell cell = GetCellUnderCursor();
         if (cell && !cell.Unit)
         {
-            hexGrid.AddUnit(Instantiate(HexUnit.unitPrefab), cell, HexMapCamera.rotationAngle, 5, activeUnitTeamIndex);
+            hexGrid.AddUnit(Instantiate(HexUnit.UnitPrefab), cell, HexMapCamera.RotationAngle, 5, activeUnitTeamIndex);
         }
     }
 

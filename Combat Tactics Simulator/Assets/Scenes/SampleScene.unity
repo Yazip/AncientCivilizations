@@ -864,7 +864,6 @@ MonoBehaviour:
   cellCountX: 20
   cellCountZ: 15
   cellPrefab: {fileID: 8071554621907633282, guid: 3ad582c5e26a177479ab0c9b61d43feb, type: 3}
-  cellLabelPrefab: {fileID: 609661567836283486, guid: 6f99e9125c7c7744db7f1382b7840cd1, type: 3}
   noiseSource: {fileID: 2800000, guid: 403b475f0a610fe4cab1af4697a34885, type: 3}
   colors:
   - {r: 1, g: 1, b: 0, a: 0}
@@ -2041,7 +2040,7 @@ GameObject:
   - component: {fileID: 548542494}
   - component: {fileID: 548542493}
   m_Layer: 0
-  m_Name: Model UI
+  m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2069,11 +2068,11 @@ Transform:
   m_GameObject: {fileID: 548542492}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -99.81603, y: -335.38947, z: -23.153107}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1033610484}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &553848261
 GameObject:
@@ -3591,7 +3590,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 548542494}
   - {fileID: 133176025}
   - {fileID: 1259836242}
   - {fileID: 1159870634}
@@ -7316,3 +7314,4 @@ SceneRoots:
   - {fileID: 179348450}
   - {fileID: 318528187}
   - {fileID: 1033610484}
+  - {fileID: 548542494}

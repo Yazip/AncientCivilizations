@@ -1,27 +1,29 @@
 using UnityEngine;
-using TMPro;
 using System.Collections.Generic;
 
 public class HexGrid : MonoBehaviour
 {
 
-    public HexGridChunk chunkPrefab;
+    [SerializeField]
+    HexGridChunk chunkPrefab;
 
     HexGridChunk[] chunks;
 
-    public int cellCountX = 20, cellCountZ = 15;
+    [SerializeField]
+    int cellCountX = 20, cellCountZ = 15;
 
     int chunkCountX, chunkCountZ;
 
-    public HexCell cellPrefab;
+    [SerializeField]
+    HexCell cellPrefab;
 
     HexCell[] cells;
 
-    public TMP_Text cellLabelPrefab;
+    [SerializeField]
+    Texture2D noiseSource;
 
-    public Texture2D noiseSource;
-
-    public Color[] colors;
+    [SerializeField]
+    Color[] colors;
 
     HexCellPriorityQueue searchFrontier;
 
@@ -32,7 +34,24 @@ public class HexGrid : MonoBehaviour
 
     List<HexUnit> units = new List<HexUnit>();
 
-    public HexUnit unitPrefab;
+    [SerializeField]
+    HexUnit unitPrefab;
+
+    public int CellCountX
+    {
+        get
+        {
+            return cellCountX;
+        }
+    }
+
+    public int CellCountZ
+    {
+        get
+        {
+            return cellCountZ;
+        }
+    }
 
     public bool HasPath
     {
@@ -56,19 +75,19 @@ public class HexGrid : MonoBehaviour
 
     void Awake()
     {
-        HexMetrics.noiseSource = noiseSource;
-        HexUnit.unitPrefab = unitPrefab;
-        HexMetrics.colors = colors;
-        CreateMap(cellCountX, cellCountZ);
+        HexMetrics.NoiseSource = noiseSource;
+        HexUnit.UnitPrefab = unitPrefab;
+        HexMetrics.Colors = colors;
+        CreateMap(CellCountX, CellCountZ);
     }
 
     void OnEnable()
     {
-        if (!HexMetrics.noiseSource)
+        if (!HexMetrics.NoiseSource)
         {
-            HexMetrics.noiseSource = noiseSource;
-            HexUnit.unitPrefab = unitPrefab;
-            HexMetrics.colors = colors;
+            HexMetrics.NoiseSource = noiseSource;
+            HexUnit.UnitPrefab = unitPrefab;
+            HexMetrics.Colors = colors;
         }
     }
 
@@ -95,8 +114,8 @@ public class HexGrid : MonoBehaviour
 
         cellCountX = x;
         cellCountZ = z;
-        chunkCountX = cellCountX / HexMetrics.chunkSizeX;
-        chunkCountZ = cellCountZ / HexMetrics.chunkSizeZ;
+        chunkCountX = CellCountX / HexMetrics.chunkSizeX;
+        chunkCountZ = CellCountZ / HexMetrics.chunkSizeZ;
         CreateChunks();
         CreateCells();
         return true;
@@ -120,11 +139,11 @@ public class HexGrid : MonoBehaviour
     // Метод для создания ячеек
     void CreateCells()
     {
-        cells = new HexCell[cellCountZ * cellCountX];
+        cells = new HexCell[CellCountZ * CellCountX];
 
-        for (int z = 0, i = 0; z < cellCountZ; z++)
+        for (int z = 0, i = 0; z < CellCountZ; z++)
         {
-            for (int x = 0; x < cellCountX; x++)
+            for (int x = 0; x < CellCountX; x++)
             {
                 CreateCell(x, z, i++);
             }
@@ -147,7 +166,7 @@ public class HexGrid : MonoBehaviour
 
         HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
         cell.transform.localPosition = position;
-        cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
+        cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
 
         // Соединение соседей
 
@@ -159,27 +178,21 @@ public class HexGrid : MonoBehaviour
         {
             if ((z & 1) == 0)
             {
-                cell.SetNeighbor(HexDirection.SE, cells[i - cellCountX]);
+                cell.SetNeighbor(HexDirection.SE, cells[i - CellCountX]);
                 if (x > 0)
                 {
-                    cell.SetNeighbor(HexDirection.SW, cells[i - cellCountX - 1]);
+                    cell.SetNeighbor(HexDirection.SW, cells[i - CellCountX - 1]);
                 }
             }
             else
             {
-                cell.SetNeighbor(HexDirection.SW, cells[i - cellCountX]);
-                if (x < cellCountX - 1)
+                cell.SetNeighbor(HexDirection.SW, cells[i - CellCountX]);
+                if (x < CellCountX - 1)
                 {
-                    cell.SetNeighbor(HexDirection.SE, cells[i - cellCountX + 1]);
+                    cell.SetNeighbor(HexDirection.SE, cells[i - CellCountX + 1]);
                 }
             }
         }
-
-        // Выводим текст на ячейке
-
-        TMP_Text label = Instantiate<TMP_Text>(cellLabelPrefab);
-        label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
-        cell.uiRect = label.rectTransform;
 
         cell.Elevation = 0; // Задаём высоту ячейки
 
@@ -203,23 +216,23 @@ public class HexGrid : MonoBehaviour
     {
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
-        int index = coordinates.X + coordinates.Z * cellCountX + coordinates.Z / 2;
+        int index = coordinates.X + coordinates.Z * CellCountX + coordinates.Z / 2;
         return cells[index];
     }
 
     public HexCell GetCell(HexCoordinates coordinates)
     {
         int z = coordinates.Z;
-        if (z < 0 || z >= cellCountZ)
+        if (z < 0 || z >= CellCountZ)
         {
             return null;
         }
         int x = coordinates.X + z / 2;
-        if (x < 0 || x >= cellCountX)
+        if (x < 0 || x >= CellCountX)
         {
             return null;
         }
-        return cells[x + z * cellCountX];
+        return cells[x + z * CellCountX];
     }
 
     public HexCell GetCell(Ray ray)
@@ -230,15 +243,6 @@ public class HexGrid : MonoBehaviour
             return GetCell(hit.point);
         }
         return null;
-    }
-
-    // Метод для активации/деактивации UI
-    public void ShowUI(bool visible)
-    {
-        for (int i = 0; i < chunks.Length; i++)
-        {
-            chunks[i].ShowUI(visible);
-        }
     }
 
     // Метод для нахождения расстояний до ячеек
@@ -307,7 +311,7 @@ public class HexGrid : MonoBehaviour
                     neighbor.Distance = distance;
                     neighbor.PathFrom = current;
                     neighbor.SearchHeuristic =
-                        neighbor.coordinates.DistanceTo(toCell.coordinates);
+                        neighbor.Coordinates.DistanceTo(toCell.Coordinates);
                     searchFrontier.Enqueue(neighbor);
                 }
                 else if (distance < neighbor.Distance)
@@ -322,7 +326,7 @@ public class HexGrid : MonoBehaviour
         return false;
     }
 
-    // Метод для очистки и отключения показа пути
+    // Метод для очистки пути
     public void ClearPath()
     {
         if (currentPathExists)
