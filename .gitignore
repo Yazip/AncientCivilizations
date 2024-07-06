@@ -2,12 +2,9 @@
 /Library/
 /[Tt]emp/
 /[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 /[Tt]rash/
-/[Bb]uild/
 /[Kk]eys/
 /[Tt]rash
 /Logs/
@@ -17,8 +14,6 @@
 */[Ll]ibrary/
 */[Tt]emp/
 */[Oo]bj/
-*/[Bb]uild/
-*/[Bb]uilds/
 */[Ll]ogs/
 */[Mm]emoryCaptures/
 */[Tt]rash
@@ -46,7 +41,6 @@
 */sysinfo.txt
 *.apk
 *.unitypackage
-crashlytics-build.properties
 
 *.vsconfig
 .vsconfig
@@ -98,15 +92,6 @@ ExportedObj/
 # Unity3D generated file on crash reports
 sysinfo.txt
 
-# Builds
-*.apk
-*.aab
-*.unitypackage
-*.app
-
-# Crashlytics generated file
-crashlytics-build.properties
-
 # Packed Addressables
 /[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
 
@@ -137,8 +122,7 @@ crashlytics-build.properties
 *.lib 
 *.sbr 
 *.sdf 
-.pyc 
-.xml 
+.pyc  
 ipch/ 
 obj/ 
 [Bb]in 
@@ -150,9 +134,6 @@ Ankh.NoLoad
 _ReSharper*/
 .resharper
 [Tt]est[Rr]esult
-
-#Project files 
-[Bb]uild/
 
 #Subversion files
 .svn 

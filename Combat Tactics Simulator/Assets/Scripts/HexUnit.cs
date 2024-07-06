@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 
 public class HexUnit : MonoBehaviour
 {
@@ -19,7 +18,7 @@ public class HexUnit : MonoBehaviour
     List<HexCell> pathToTravel;
 
     [SerializeField]
-    AnimatorController[] animatorControllers;
+    RuntimeAnimatorController[] animatorControllers;
 
     Animator unitAssetPrefabAnimator;
 
